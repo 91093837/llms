@@ -1,6 +1,7 @@
 # openai
 pandas
 numpy
+jinja2
 langchain
 langchain-openai
 pydantic

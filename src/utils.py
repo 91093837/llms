@@ -3,6 +3,8 @@ from typing import Type, Dict, Any
 
 import os
 import yaml
+import jinja2
+import hashlib
 import datetime as dt
 from dotenv import load_dotenv
 
@@ -16,6 +18,18 @@ def create_model(name: str, fields: Dict[str, Any]) -> Type[BaseModel]:
     class_body = {"__annotations__": fields}
     model = type(name, (BaseModel,), class_body)
     return model
+
+
+def hash_string(str):
+    return hashlib.md5(str.encode()).hexdigest()
+
+
+def load_jinja_prompt(path: str, values: dict):
+    loader = jinja2.FileSystemLoader(searchpath="./")
+    template = jinja2.Environment(loader=loader, autoescape=True)
+    template = template.get_template(path)
+    output = template.render(**values)
+    return output
 
 
 def load_prompt(path: str):
