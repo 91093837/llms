@@ -1,7 +1,10 @@
 # openai
-pandas
-numpy
+bs4
 jinja2
 langchain
 langchain-openai
+lxml
+numpy
+pandas
 pydantic
+selenium

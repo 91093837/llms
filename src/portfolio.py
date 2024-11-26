@@ -22,7 +22,8 @@ from langchain_core.messages.ai import AIMessage
 
 symbols = ["NVDA", "AAPL", "MSFT", "AMZN", "GOOG", "META"]
 fields = {s: float for s in symbols}
-Score = create_model("Score", fields)
+description = {s: f"investing weight in {s}" for s in symbols}
+Score = create_model("Score", fields, description)
 
 
 class DummyModel(BaseModel):
@@ -40,8 +41,7 @@ class DummyChatOpenAI(ChatOpenAI):
         return AIMessage(content)
 
 
-def one_short():
-
+def per_market_call():
     values = {"date": dt.datetime.now().strftime("%Y-%m-%d")}
     prompt_template = load_jinja_prompt("prompts/per-market-fundamental.jinja", values)
 
@@ -79,4 +79,4 @@ def one_short():
 
 
 if __name__ == "__main__":
-    one_short()
+    per_market_call()

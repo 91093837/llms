@@ -15,7 +15,7 @@ class Score(BaseModel):
     )
 
 
-def many_shot():
+def security_call():
     # to-do: add prompt input to the database
     llm = ChatOpenAI(model=OPENAI_MODEL)
     structured_llm = llm.with_structured_output(Score, include_raw=True)
@@ -50,4 +50,4 @@ def many_shot():
 
 
 if __name__ == "__main__":
-    many_shot()
+    security_call()

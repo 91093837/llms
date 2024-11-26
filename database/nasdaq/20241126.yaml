@@ -1,0 +1,505 @@
+- symbol: AAPL
+  companyName: apple
+  marketCap: 3553125354380.0
+  lastSalePrice: 235.545
+  percentageChange: 0.21
+- symbol: NVDA
+  companyName: nvidia
+  marketCap: 3353170800000.0
+  lastSalePrice: 136.75
+  percentageChange: -0.12
+- symbol: MSFT
+  companyName: microsoft
+  marketCap: 3182054623320.0
+  lastSalePrice: 426.2
+  percentageChange: -0.42
+- symbol: AMZN
+  companyName: amazon.com
+  marketCap: 2118248967562.0
+  lastSalePrice: 208.25
+  percentageChange: 0.19
+- symbol: GOOG
+  companyName: alphabet class c capital stock
+  marketCap: 2088559420000.0
+  lastSalePrice: 170.87
+  percentageChange: 0.15
+- symbol: GOOGL
+  companyName: alphabet
+  marketCap: 2070197920000.0
+  lastSalePrice: 169.16
+  percentageChange: 0.02
+- symbol: META
+  companyName: meta platforms
+  marketCap: 1447895153217.0
+  lastSalePrice: 573.5
+  percentageChange: -0.01
+- symbol: TSLA
+  companyName: tesla
+  marketCap: 1085738478464.0
+  lastSalePrice: 339.24
+  percentageChange: 0.3
+- symbol: AVGO
+  companyName: broadcom
+  marketCap: 769430703913.0
+  lastSalePrice: 165.17
+  percentageChange: 0.26
+- symbol: COST
+  companyName: costco wholesale
+  marketCap: 430445941196.0
+  lastSalePrice: 971.895
+  percentageChange: 0.04
+- symbol: NFLX
+  companyName: netflix
+  marketCap: 372999950276.0
+  lastSalePrice: 874.25
+  percentageChange: 0.19
+- symbol: TMUS
+  companyName: t-mobile us
+  marketCap: 284226389828.0
+  lastSalePrice: 245.95
+  percentageChange: 0.42
+- symbol: ASML
+  companyName: asml holding
+  marketCap: 264367593860.0
+  lastSalePrice: 672.44
+  percentageChange: 0.07
+- symbol: CSCO
+  companyName: cisco systems
+  marketCap: 237332564713.0
+  lastSalePrice: 59.8
+  percentageChange: 0.35
+- symbol: ADBE
+  companyName: adobe
+  marketCap: 231237060000.0
+  lastSalePrice: 526.205
+  percentageChange: 0.17
+- symbol: AMD
+  companyName: advanced micro devices
+  marketCap: 223493027691.0
+  lastSalePrice: 137.4
+  percentageChange: -0.23
+- symbol: PEP
+  companyName: pepsico
+  marketCap: 222481740294.0
+  lastSalePrice: 162.68
+  percentageChange: 0.32
+- symbol: LIN
+  companyName: linde
+  marketCap: 217413698510.0
+  lastSalePrice: 456.6
+  percentageChange: 0.0
+- symbol: AZN
+  companyName: astrazeneca
+  marketCap: 205755107010.0
+  lastSalePrice: 66.56
+  percentageChange: 0.3
+- symbol: ISRG
+  companyName: intuitive surgical
+  marketCap: 193084877135.0
+  lastSalePrice: 543.5
+  percentageChange: 0.26
+- symbol: TXN
+  companyName: texas instruments
+  marketCap: 183309928583.0
+  lastSalePrice: 201.29
+  percentageChange: 0.17
+- symbol: INTU
+  companyName: intuit
+  marketCap: 178894759050.0
+  lastSalePrice: 643.0
+  percentageChange: 0.65
+- symbol: QCOM
+  companyName: qualcomm
+  marketCap: 174349230000.0
+  lastSalePrice: 156.9
+  percentageChange: -0.02
+- symbol: BKNG
+  companyName: booking holdings
+  marketCap: 172590091215.0
+  lastSalePrice: 5230.0
+  percentageChange: 0.29
+- symbol: CMCSA
+  companyName: comcast
+  marketCap: 163163665728.0
+  lastSalePrice: 42.77
+  percentageChange: 0.3
+- symbol: AMGN
+  companyName: amgen
+  marketCap: 150514537767.0
+  lastSalePrice: 277.0
+  percentageChange: -1.07
+- symbol: HON
+  companyName: honeywell international
+  marketCap: 149816996352.0
+  lastSalePrice: 230.4
+  percentageChange: 0.0
+- symbol: AMAT
+  companyName: applied materials
+  marketCap: 142786788042.0
+  lastSalePrice: 173.19
+  percentageChange: -0.01
+- symbol: ARM
+  companyName: arm holdings
+  marketCap: 142233985550.0
+  lastSalePrice: 136.79
+  percentageChange: 0.05
+- symbol: PDD
+  companyName: pdd holdings
+  marketCap: 136637926477.0
+  lastSalePrice: 99.46
+  percentageChange: 0.15
+- symbol: PANW
+  companyName: palo alto networks
+  marketCap: 130058840000.0
+  lastSalePrice: 396.22
+  percentageChange: -0.05
+- symbol: ADP
+  companyName: automatic data processing
+  marketCap: 125484501801.0
+  lastSalePrice: 308.28
+  percentageChange: 0.1
+- symbol: VRTX
+  companyName: vertex pharmaceuticals
+  marketCap: 120284205480.0
+  lastSalePrice: 472.27
+  percentageChange: 1.11
+- symbol: SBUX
+  companyName: starbucks
+  marketCap: 114150984000.0
+  lastSalePrice: 100.94
+  percentageChange: 0.26
+- symbol: GILD
+  companyName: gilead sciences
+  marketCap: 113846386037.0
+  lastSalePrice: 91.75
+  percentageChange: 0.44
+- symbol: MU
+  companyName: micron technology
+  marketCap: 112870005028.0
+  lastSalePrice: 101.73
+  percentageChange: -0.07
+- symbol: APP
+  companyName: applovin
+  marketCap: 110668109205.0
+  lastSalePrice: 330.7
+  percentageChange: 0.28
+- symbol: ADI
+  companyName: analog devices
+  marketCap: 108756891318.0
+  lastSalePrice: 219.5
+  percentageChange: 0.21
+- symbol: MELI
+  companyName: mercadolibre
+  marketCap: 106971461250.0
+  lastSalePrice: 2111.37
+  percentageChange: 0.06
+- symbol: INTC
+  companyName: intel
+  marketCap: 103727650000.0
+  lastSalePrice: 23.92
+  percentageChange: -0.54
+- symbol: LRCX
+  companyName: lam research
+  marketCap: 93529132650.0
+  lastSalePrice: 72.94
+  percentageChange: 0.34
+- symbol: CTAS
+  companyName: cintas
+  marketCap: 91335041416.0
+  lastSalePrice: 226.63
+  percentageChange: 0.07
+- symbol: CRWD
+  companyName: crowdstrike holdings
+  marketCap: 89299554806.0
+  lastSalePrice: 352.63
+  percentageChange: -3.2
+- symbol: ABNB
+  companyName: airbnb
+  marketCap: 88546818959.0
+  lastSalePrice: 139.67
+  percentageChange: 0.0
+- symbol: PYPL
+  companyName: paypal holdings
+  marketCap: 87160725706.0
+  lastSalePrice: 87.24
+  percentageChange: 0.35
+- symbol: MDLZ
+  companyName: mondelez international
+  marketCap: 86757163200.0
+  lastSalePrice: 64.88
+  percentageChange: 0.0
+- symbol: SNPS
+  companyName: synopsys
+  marketCap: 85094333489.0
+  lastSalePrice: 554.46
+  percentageChange: 0.09
+- symbol: CDNS
+  companyName: cadence design systems
+  marketCap: 85048956300.0
+  lastSalePrice: 310.1001
+  percentageChange: 0.0
+- symbol: KLAC
+  companyName: kla
+  marketCap: 84465287014.0
+  lastSalePrice: 631.82
+  percentageChange: 0.06
+- symbol: CEG
+  companyName: constellation energy
+  marketCap: 83424234951.0
+  lastSalePrice: 267.536
+  percentageChange: 0.3
+- symbol: REGN
+  companyName: regeneron pharmaceuticals
+  marketCap: 82750113529.0
+  lastSalePrice: 754.5
+  percentageChange: 0.2
+- symbol: MRVL
+  companyName: marvell technology
+  marketCap: 80677868000.0
+  lastSalePrice: 92.89
+  percentageChange: -0.27
+- symbol: MAR
+  companyName: marriott international
+  marketCap: 80083329234.0
+  lastSalePrice: 288.44
+  percentageChange: 0.09
+- symbol: DASH
+  companyName: doordash
+  marketCap: 74360080743.0
+  lastSalePrice: 179.49
+  percentageChange: 0.27
+- symbol: FTNT
+  companyName: fortinet
+  marketCap: 73916698195.0
+  lastSalePrice: 96.63
+  percentageChange: 0.2
+- symbol: ORLY
+  companyName: o'reilly automotive
+  marketCap: 71829682844.0
+  lastSalePrice: 1244.22
+  percentageChange: 0.0
+- symbol: WDAY
+  companyName: workday
+  marketCap: 71600350000.0
+  lastSalePrice: 244.2
+  percentageChange: -9.62
+- symbol: CSX
+  companyName: csx
+  marketCap: 70753698724.0
+  lastSalePrice: 36.81
+  percentageChange: 0.33
+- symbol: ADSK
+  companyName: autodesk
+  marketCap: 68361400000.0
+  lastSalePrice: 288.0
+  percentageChange: -9.42
+- symbol: TEAM
+  companyName: atlassian
+  marketCap: 68293443926.0
+  lastSalePrice: 262.22
+  percentageChange: 0.0
+- symbol: TTD
+  companyName: the trade desk
+  marketCap: 63661163299.0
+  lastSalePrice: 129.02
+  percentageChange: 0.03
+- symbol: CPRT
+  companyName: copart
+  marketCap: 61457734589.0
+  lastSalePrice: 64.01
+  percentageChange: 0.33
+- symbol: PCAR
+  companyName: paccar
+  marketCap: 60724490164.0
+  lastSalePrice: 115.82
+  percentageChange: 0.0
+- symbol: ROP
+  companyName: roper technologies
+  marketCap: 60250987655.0
+  lastSalePrice: 563.0
+  percentageChange: 0.2
+- symbol: NXPI
+  companyName: nxp semiconductors
+  marketCap: 58115214923.0
+  lastSalePrice: 229.315
+  percentageChange: 0.29
+- symbol: CHTR
+  companyName: charter communications new
+  marketCap: 55497579658.0
+  lastSalePrice: 390.29
+  percentageChange: 0.0
+- symbol: MNST
+  companyName: monster beverage
+  marketCap: 53323252903.0
+  lastSalePrice: 55.72
+  percentageChange: 1.62
+- symbol: AEP
+  companyName: american electric power company
+  marketCap: 52899714726.0
+  lastSalePrice: 99.9832
+  percentageChange: 0.66
+- symbol: PAYX
+  companyName: paychex
+  marketCap: 52613491690.0
+  lastSalePrice: 146.19
+  percentageChange: 0.0
+- symbol: DDOG
+  companyName: datadog
+  marketCap: 52449842461.0
+  lastSalePrice: 154.4
+  percentageChange: 0.01
+- symbol: FANG
+  companyName: diamondback energy
+  marketCap: 51381338468.0
+  lastSalePrice: 175.97
+  percentageChange: 0.0
+- symbol: ROST
+  companyName: ross stores
+  marketCap: 51217495368.0
+  lastSalePrice: 154.39
+  percentageChange: 0.01
+- symbol: ODFL
+  companyName: old dominion freight line
+  marketCap: 48244038210.0
+  lastSalePrice: 226.83
+  percentageChange: 0.38
+- symbol: FAST
+  companyName: fastenal company
+  marketCap: 48179754230.0
+  lastSalePrice: 84.09
+  percentageChange: -0.01
+- symbol: KDP
+  companyName: keurig dr pepper
+  marketCap: 44288211640.0
+  lastSalePrice: 32.8
+  percentageChange: 0.46
+- symbol: EA
+  companyName: electronic arts
+  marketCap: 43280260921.0
+  lastSalePrice: 165.0801
+  percentageChange: 0.04
+- symbol: BKR
+  companyName: baker hughes company
+  marketCap: 43074058466.0
+  lastSalePrice: 44.0
+  percentageChange: 1.08
+- symbol: VRSK
+  companyName: verisk analytics
+  marketCap: 41621834372.0
+  lastSalePrice: 294.29
+  percentageChange: -0.16
+- symbol: XEL
+  companyName: xcel energy
+  marketCap: 41270754213.0
+  lastSalePrice: 71.87
+  percentageChange: 0.0
+- symbol: LULU
+  companyName: lululemon athletica
+  marketCap: 40777235772.0
+  lastSalePrice: 319.99
+  percentageChange: 0.36
+- symbol: CTSH
+  companyName: cognizant technology solutions
+  marketCap: 40191514516.0
+  lastSalePrice: 81.06
+  percentageChange: 0.0
+- symbol: EXC
+  companyName: exelon
+  marketCap: 39680881036.0
+  lastSalePrice: 39.63
+  percentageChange: 0.35
+- symbol: KHC
+  companyName: the kraft heinz company
+  marketCap: 38657321361.0
+  lastSalePrice: 31.98
+  percentageChange: 0.03
+- symbol: GEHC
+  companyName: ge healthcare technologies
+  marketCap: 37696589497.0
+  lastSalePrice: 82.55
+  percentageChange: 0.05
+- symbol: MCHP
+  companyName: microchip technology
+  marketCap: 36736870108.0
+  lastSalePrice: 68.48
+  percentageChange: 0.1
+- symbol: CCEP
+  companyName: coca-cola europacific partners
+  marketCap: 35925167434.0
+  lastSalePrice: 77.94
+  percentageChange: 0.0
+- symbol: IDXX
+  companyName: idexx laboratories
+  marketCap: 34172107980.0
+  lastSalePrice: 417.32
+  percentageChange: 0.0
+- symbol: TTWO
+  companyName: take-two interactive software
+  marketCap: 32991605399.0
+  lastSalePrice: 188.99
+  percentageChange: 0.61
+- symbol: CSGP
+  companyName: costar group
+  marketCap: 32763964599.0
+  lastSalePrice: 79.92
+  percentageChange: 0.0
+- symbol: ZS
+  companyName: zscaler
+  marketCap: 32068648052.0
+  lastSalePrice: 210.61
+  percentageChange: 0.15
+- symbol: ANSS
+  companyName: ansys
+  marketCap: 30594366407.0
+  lastSalePrice: 350.19
+  percentageChange: 0.1
+- symbol: DXCM
+  companyName: dexcom
+  marketCap: 30443004697.0
+  lastSalePrice: 77.87
+  percentageChange: -0.09
+- symbol: 'ON'
+  companyName: on semiconductor
+  marketCap: 30154974559.0
+  lastSalePrice: 70.86
+  percentageChange: 0.06
+- symbol: WBD
+  companyName: warner bros. discovery
+  marketCap: 24801499131.0
+  lastSalePrice: 10.15
+  percentageChange: 0.4
+- symbol: MDB
+  companyName: mongodb
+  marketCap: 24775814872.0
+  lastSalePrice: 335.55
+  percentageChange: 0.04
+- symbol: GFS
+  companyName: globalfoundries
+  marketCap: 24417010661.0
+  lastSalePrice: 44.11
+  percentageChange: 0.0
+- symbol: CDW
+  companyName: cdw
+  marketCap: 23694350224.0
+  lastSalePrice: 177.94
+  percentageChange: 0.08
+- symbol: BIIB
+  companyName: biogen
+  marketCap: 22978482725.0
+  lastSalePrice: 157.85
+  percentageChange: 0.1
+- symbol: ILMN
+  companyName: illumina
+  marketCap: 22671870000.0
+  lastSalePrice: 142.95
+  percentageChange: 0.0
+- symbol: SMCI
+  companyName: super micro computer
+  marketCap: 20152287324.0
+  lastSalePrice: 34.79
+  percentageChange: 1.09
+- symbol: MRNA
+  companyName: moderna
+  marketCap: 16181588953.0
+  lastSalePrice: 42.0996
+  percentageChange: 0.12

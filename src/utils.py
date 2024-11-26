@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Type, Dict, Any
 
 import os
@@ -14,10 +14,35 @@ OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 OPENAI_MODEL = "gpt-3.5-turbo"
 
 
-def create_model(name: str, fields: Dict[str, Any]) -> Type[BaseModel]:
-    class_body = {"__annotations__": fields}
+def get_current_timestamp():
+    return int(dt.datetime.now().timestamp())
+
+
+def create_model(
+    name: str, fields: Dict[str, Any], descriptions: Dict[str, str] = None
+) -> Type[BaseModel]:
+    if descriptions is None:
+        descriptions = {}
+
+    class_body = {}
+    annotations = {}
+    for field_name, field_type in fields.items():
+        annotations[field_name] = field_type
+        description = descriptions.get(field_name, None)
+        if description:
+            class_body[field_name] = Field(..., description=description)
+        else:
+            class_body[field_name] = Field(...)
+
+    class_body["__annotations__"] = annotations
     model = type(name, (BaseModel,), class_body)
     return model
+
+
+# def create_model(name: str, fields: Dict[str, Any]) -> Type[BaseModel]:
+#     class_body = {"__annotations__": fields}
+#     model = type(name, (BaseModel,), class_body)
+#     return model
 
 
 def hash_string(str):
