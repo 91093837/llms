@@ -28,6 +28,8 @@ jobs:
       - name: Commit and Push 
         run: |
           cd target-repo
+          git config --global user.email "robot@github.com"
+          git config --global user.name "ci/cd"
           git add database.txt
-          git commit -m "Update database.txt from REPO_1"
+          git commit -m "update data"
           git push origin main
