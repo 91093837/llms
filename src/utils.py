@@ -63,9 +63,9 @@ def load_prompt(path: str):
 
 
 def upload_yaml(data: dict, path: str, name: str = None):
-    # if name is None:
-    now = dt.datetime.now().strftime("%Y%m%d")
-    path += f"/{now}.yaml"
+    if name is None:
+        now = dt.datetime.now().strftime("%Y%m%d")
+        path += f"/{now}.yaml"
 
     with open(path, "w") as yaml_file:
         yaml.safe_dump(data, yaml_file, sort_keys=False)

@@ -1,0 +1,33 @@
+name: Upload data to website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload-file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Generate database.txt
+        run: |
+          echo "Sample database content" > database.txt
+
+      - name: Clone website
+        run: |
+          git clone git@github.com:can-be-anything/website.git target-repo
+
+      - name: Copy file to website
+        run: |
+          cp database.txt target-repo/
+
+      - name: Commit and Push 
+        run: |
+          cd target-repo
+          git add database.txt
+          git commit -m "Update database.txt from REPO_1"
+          git push origin main
