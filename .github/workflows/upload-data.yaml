@@ -19,7 +19,7 @@ jobs:
 
       - name: Clone website
         run: |
-          git clone git@github.com:can-be-anything/website.git target-repo
+          git clone https://${{ secrets.REPO_TOKEN }}@github.com/can-be-anything/website.git target-repo
 
       - name: Copy file to website
         run: |
