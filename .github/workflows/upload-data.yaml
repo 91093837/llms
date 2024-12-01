@@ -9,10 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Load env 
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -29,6 +25,8 @@ jobs:
       - name: Run pipeline
         run: |
           python src/pipeline.py
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Clone website
         run: |
