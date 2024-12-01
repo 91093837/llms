@@ -8,8 +8,8 @@ from utils import (
     load_prompt,
     load_jinja_prompt,
     get_current_timestamp,
-    load_yaml,
-    upload_yaml,
+    load_json,
+    upload_json,
     hash_string,
 )
 from pydantic import BaseModel
@@ -24,7 +24,7 @@ from langchain_core.messages.ai import AIMessage
 
 
 def load_tickers():
-    data = load_yaml("database/nasdaq.yaml")
+    data = load_json("database/nasdaq.json")
     ts = data[0]["ts"]
     data = [r for r in data if r["ts"] == ts]
     return data
@@ -85,15 +85,19 @@ def build_portfolio(tickers: List[dict] = None):
         | {"token_size": len(tokens)}
         | {"execution_ts": ts}
     )
-    upload_yaml(data=raw_output, path="database/model_dump.yaml")
+    upload_json(data=raw_output, path="database/model_dump.json")
 
     # dump parsed
     portfolio = parser.parse(output.content)
     portfolio = portfolio.model_dump()
-    portfolio["date"] = dt.datetime.now().strftime("%Y-%m-%d")
-    portfolio["execution_ts"] = ts
-    portfolio["name"] = "openai_fundamental"
-    upload_yaml(data=portfolio, path="database/model_portfolio.yaml")
+
+    output = {}
+    output["date"] = dt.datetime.now().strftime("%Y-%m-%d")
+    output["execution_ts"] = ts
+    output["name"] = "openai_fundamental"
+    output["portfolio"] = portfolio
+
+    upload_json(data=output, path="database/model_portfolio.json")
 
     return None
 

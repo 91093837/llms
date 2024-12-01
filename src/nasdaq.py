@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
-from utils import upload_yaml, get_current_timestamp
+import datetime as dt
+from utils import upload_json, get_current_timestamp
 
 
 def get_data():
@@ -51,11 +52,12 @@ def get_data():
         .astype(float)
     )
     df["date"] = date
+    df["date_f"] = dt.datetime.strptime(date, "%b %d, %Y").strftime("%Y-%m-%d")
     df["execution_ts"] = get_current_timestamp()
 
     df = df.sort_values(by="marketCap", ascending=False)
     data = df.to_dict("records")
-    upload_yaml(data, path="database/nasdaq.yaml")
+    upload_json(data, path="database/nasdaq.json")
     return data
 
 

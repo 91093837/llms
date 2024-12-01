@@ -1,10 +1,68 @@
+import pandas as pd
+from utils import load_json, upload_json
 from nasdaq import get_data
 from portfolio import build_portfolio
+
+
+def calculate_summary():
+    pct_chg = load_json("database/nasdaq.json")
+    portfolio = load_json("database/model_portfolio.json")
+
+    pct_chg = pd.DataFrame().from_dict(pct_chg)
+    pct_chg = pct_chg.pivot(index="date_f", columns="symbol", values="percentageChange")
+
+    def metrics(pnl):
+        output = pd.Series()
+        shifts = [1, 5, 21, 63, 126]
+        for s in shifts:
+            output[f"{s}d_sharpe"] = (
+                pnl.rolling(s).mean().item() / pnl.rolling(s).std().item()
+            )
+            output[f"{s}d_vol"] = pnl.rolling(s).std().item()
+
+        output["max_drawdown"] = (pnl.cummax() - pnl).max()
+        return output
+
+    names = set(p["name"] for p in portfolio)
+
+    output = []
+    for n in names:
+        w = {p["date"]: p["portfolio"] for p in portfolio if p["name"] == n}
+        w = pd.DataFrame().from_dict(w).T
+        pnl = (w * pct_chg).sum(axis=1)
+        summary = metrics(pnl)
+        summary["name"] = n
+
+        new_index = ["name"] + summary.index.difference(["name"]).to_list()
+        summary = summary.reindex(new_index)
+
+        output.append(summary.to_dict())
+    upload_json(output, "database/ranking.json")
+    return None
+
+
+def parse_data():
+    portfolio = load_json("database/model_portfolio.json")
+    last_date = max([p["date"] for p in portfolio])
+    exclude_list = ["date", "name", "execution_ts"]
+    last_portfolio = {
+        p["name"]: [
+            {"symbol": k, "weight": v}
+            for k, v in p["portfolio"].items()
+            if k not in exclude_list
+        ]
+        for p in portfolio
+        if p["date"] == last_date
+    }
+    upload_json(last_portfolio, "database/last_portfolio.json")
+    return None
 
 
 def main():
     data = get_data()
     build_portfolio(data)
+    parse_data()
+    calculate_summary()
     return None
 
 

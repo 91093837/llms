@@ -1,7 +1,7 @@
 import datetime as dt
 from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
-from utils import OPENAI_MODEL, upload_yaml, load_prompt
+from utils import OPENAI_MODEL, upload_json, load_prompt
 
 
 class Score(BaseModel):
@@ -36,7 +36,7 @@ def security_call():
 
     # dump raw
     model_dump = {k: v["raw"].model_dump() for k, v in output.items()}
-    upload_yaml(model_dump, path="database/model_dump")
+    upload_json(model_dump, path="database/model_dump")
 
     # dump parsed
     score = {k: v["parsed"].model_dump() for k, v in output.items()}
@@ -44,7 +44,7 @@ def security_call():
     for k, v in score.items():
         v.update({"timestamp": ts})
 
-    upload_yaml(score, path="database/model_score")
+    upload_json(score, path="database/model_score")
 
     return None
 

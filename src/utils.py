@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Type, Dict, Any
 
 import os
-import yaml
+import json
 import jinja2
 import hashlib
 import datetime as dt
@@ -62,29 +62,25 @@ def load_prompt(path: str):
     return prompt
 
 
-def load_yaml(path):
+def load_json(path):
+    assert ".json" in path
+
     if os.path.exists(path):
         with open(path, "r") as file:
-            data = yaml.safe_load(file)
+            data = json.load(file)
     return data
 
 
-def upload_yaml(data: list, path: str):
-    assert ".yaml" in path
+def upload_json(data: list, path: str, extend=False):
+    assert ".json" in path
 
-    if isinstance(data, dict):
-        data = [data]
+    if extend and os.path.exists(path):
+        with open(path, "r") as f:
+            existing_data = json.load(f) or []
+        data = existing_data + data
 
-    existing_data = []
-    if os.path.exists(path):
-        with open(path, "r") as file:
-            existing_data = yaml.safe_load(file) or []
-    existing_data.extend(data)
-
-    with open(path, "w") as yaml_file:
-        yaml.safe_dump(
-            existing_data, yaml_file, sort_keys=False, default_flow_style=False
-        )
+    with open(path, "w") as f:
+        json.dump(data, f, sort_keys=False)
 
     print(f"Data successfully appended to {path}")
     return None
