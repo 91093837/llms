@@ -1,1 +1,0 @@
-<https://www.nasdaq.com/market-activity/quotes/nasdaq-ndx-index>

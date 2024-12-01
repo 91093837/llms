@@ -1,34 +1,47 @@
 name: Upload data to website
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 9 * * 1-5'
 
 jobs:
   upload-file:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Load env 
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Generate database.txt
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+          
+      - name: Install dependencies
         run: |
-          echo "Sample database content" > database.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run pipeline
+        run: |
+          python src/pipeline.py
 
       - name: Clone website
         run: |
-          git clone https://${{ secrets.REPO_TOKEN }}@github.com/can-be-anything/website.git target-repo
+          git clone https://${{ secrets.REPO_TOKEN }}@github.com/can-be-anything/website.git website-repo
 
       - name: Copy file to website
         run: |
-          cp database.txt target-repo/
+          cp -Rf /database/ website-repo/website/src/data
 
       - name: Commit and Push 
         run: |
-          cd target-repo
-          git config --global user.email "robot@github.com"
+          cd website-repo
+          git config --global user.email "auto@robot.xyz"
           git config --global user.name "ci/cd"
           git add database.txt
           git commit -m "update data"

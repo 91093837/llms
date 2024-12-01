@@ -3,7 +3,7 @@ import pandas as pd
 from utils import upload_yaml, get_current_timestamp
 
 
-def main():
+def get_data():
     headers = {
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
     }
@@ -51,9 +51,10 @@ def main():
     df["ts"] = get_current_timestamp()
 
     df = df.sort_values(by="marketCap", ascending=False)
-    upload_yaml(df.to_dict("records"), path="database/nasdaq")
-    return None
+    data = df.to_dict("records")
+    upload_yaml(data, path="database/nasdaq.yaml")
+    return data
 
 
 if __name__ == "__main__":
-    main()
+    get_data()

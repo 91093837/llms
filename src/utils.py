@@ -62,10 +62,29 @@ def load_prompt(path: str):
     return prompt
 
 
-def upload_yaml(data: dict, path: str, name: str = None):
-    if name is None:
-        now = dt.datetime.now().strftime("%Y%m%d")
-        path += f"/{now}.yaml"
+def load_yaml(path):
+    if os.path.exists(path):
+        with open(path, "r") as file:
+            data = yaml.safe_load(file)
+    return data
+
+
+def upload_yaml(data: list, path: str):
+    assert ".yaml" in path
+
+    if isinstance(data, dict):
+        data = [data]
+
+    existing_data = []
+    if os.path.exists(path):
+        with open(path, "r") as file:
+            existing_data = yaml.safe_load(file) or []
+    existing_data.extend(data)
 
     with open(path, "w") as yaml_file:
-        yaml.safe_dump(data, yaml_file, sort_keys=False)
+        yaml.safe_dump(
+            existing_data, yaml_file, sort_keys=False, default_flow_style=False
+        )
+
+    print(f"Data successfully appended to {path}")
+    return None
