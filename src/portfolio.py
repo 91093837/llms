@@ -7,6 +7,7 @@ from utils import (
     create_model,
     load_prompt,
     load_jinja_prompt,
+    get_current_timestamp,
     load_yaml,
     upload_yaml,
     hash_string,
@@ -71,22 +72,27 @@ def build_portfolio(tickers: List[dict] = None):
     )
     output = llm(chat_prompt_with_values.to_messages())
 
-    enc = tiktoken.encoding_for_model("gpt-4o")
+    enc = tiktoken.encoding_for_model(OPENAI_MODEL)
     tokens = enc.encode(chat_prompt_with_values.to_string())
 
     # dump raw
+    ts = get_current_timestamp()
+
     raw_output = (
         chat_prompt_with_values.model_dump()
         | output.model_dump()
         | {"prompt_hash": hash_string(PROMPT)}
         | {"token_size": len(tokens)}
+        | {"execution_ts": ts}
     )
     upload_yaml(data=raw_output, path="database/model_dump.yaml")
 
     # dump parsed
     portfolio = parser.parse(output.content)
     portfolio = portfolio.model_dump()
-    portfolio["ts"] = int(dt.datetime.now().timestamp())
+    portfolio["date"] = dt.datetime.now().strftime("%Y-%m-%d")
+
+    portfolio["execution_ts"] = ts
     upload_yaml(data=portfolio, path="database/model_portfolio.yaml")
 
     return None

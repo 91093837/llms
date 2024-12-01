@@ -9,8 +9,10 @@ def get_data():
     }
     res = requests.get(
         "https://api.nasdaq.com/api/quote/list-type/nasdaq100", headers=headers
-    )
-    main_data = res.json()["data"]["data"]["rows"]
+    ).json()
+    date = res["data"]["date"]
+    main_data = res["data"]["data"]["rows"]
+
     df = pd.DataFrame().from_dict(main_data)
     df = df[["symbol", "companyName", "marketCap", "lastSalePrice", "percentageChange"]]
 
@@ -48,7 +50,8 @@ def get_data():
         .replace("UNCH", "0")
         .astype(float)
     )
-    df["ts"] = get_current_timestamp()
+    df["date"] = date
+    df["execution_ts"] = get_current_timestamp()
 
     df = df.sort_values(by="marketCap", ascending=False)
     data = df.to_dict("records")
