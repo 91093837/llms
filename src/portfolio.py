@@ -91,8 +91,8 @@ def build_portfolio(tickers: List[dict] = None):
     portfolio = parser.parse(output.content)
     portfolio = portfolio.model_dump()
     portfolio["date"] = dt.datetime.now().strftime("%Y-%m-%d")
-
     portfolio["execution_ts"] = ts
+    portfolio["name"] = "openai_fundamental"
     upload_yaml(data=portfolio, path="database/model_portfolio.yaml")
 
     return None
