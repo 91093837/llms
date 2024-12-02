@@ -1,11 +1,9 @@
 # openai
-bs4
 jinja2
 langchain
-tiktoken
 langchain-openai
-lxml
+tiktoken
 numpy
 pandas
 pydantic
-selenium
+python-dotenv
