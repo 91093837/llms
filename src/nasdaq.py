@@ -52,12 +52,20 @@ def get_data():
         .astype(float)
     )
     df["date"] = date
-    df["date_f"] = dt.datetime.strptime(date, "%b %d, %Y").strftime("%Y-%m-%d")
+
+    try:
+        df["date_f"] = dt.datetime.strptime(date, "%b %d, %Y").strftime("%Y-%m-%d")
+        df["market_open"] = False
+    except:
+        df["date_f"] = dt.datetime.strptime(date, "%b %d, %Y %H:%M %p").strftime(
+            "%Y-%m-%d %H:%M %p"
+        )
+        df["market_open"] = True
     df["execution_ts"] = get_current_timestamp()
 
     df = df.sort_values(by="marketCap", ascending=False)
     data = df.to_dict("records")
-    upload_json(data, path="database/nasdaq.json")
+    upload_json(data, path="database/nasdaq.json", extend=True)
     return data
 
 

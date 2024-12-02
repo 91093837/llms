@@ -61,7 +61,7 @@ def build_portfolio(tickers: List[dict] = None):
     """
 
     parser = PydanticOutputParser(pydantic_object=Portfolio)
-    llm = DummyChatOpenAI(
+    llm = ChatOpenAI(
         openai_api_key=OPENAI_API_KEY, model_name=OPENAI_MODEL, temperature=0
     )
     message = HumanMessagePromptTemplate.from_template(template=PROMPT)
@@ -85,7 +85,7 @@ def build_portfolio(tickers: List[dict] = None):
         | {"token_size": len(tokens)}
         | {"execution_ts": ts}
     )
-    upload_json(data=raw_output, path="database/model_dump.json")
+    upload_json(data=[raw_output], path="database/model_dump.json", extend=True)
 
     # dump parsed
     portfolio = parser.parse(output.content)
@@ -97,7 +97,7 @@ def build_portfolio(tickers: List[dict] = None):
     output["name"] = "openai_fundamental"
     output["portfolio"] = portfolio
 
-    upload_json(data=output, path="database/model_portfolio.json")
+    upload_json(data=[output], path="database/model_portfolio.json", extend=True)
 
     return None
 

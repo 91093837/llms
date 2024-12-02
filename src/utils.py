@@ -71,7 +71,7 @@ def load_json(path):
     return data
 
 
-def upload_json(data: list, path: str, extend=False):
+def upload_json(data: list | dict, path: str, extend=False):
     assert ".json" in path
 
     if extend and os.path.exists(path):
@@ -82,5 +82,6 @@ def upload_json(data: list, path: str, extend=False):
     with open(path, "w") as f:
         json.dump(data, f, sort_keys=False)
 
-    print(f"Data successfully appended to {path}")
+    method = ["uploaded", "appended"][extend]
+    print(f"Data successfully {method} to {path}")
     return None

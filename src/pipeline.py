@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from utils import load_json, upload_json
 from nasdaq import get_data
@@ -9,6 +10,7 @@ def calculate_summary():
     portfolio = load_json("database/model_portfolio.json")
 
     pct_chg = pd.DataFrame().from_dict(pct_chg)
+    pct_chg = pct_chg.drop_duplicates(subset=["symbol", "date_f"])
     pct_chg = pct_chg.pivot(index="date_f", columns="symbol", values="percentageChange")
 
     def metrics(pnl):
@@ -16,10 +18,9 @@ def calculate_summary():
         shifts = [1, 5, 21, 63, 126]
         for s in shifts:
             output[f"{s}d_sharpe"] = (
-                pnl.rolling(s).mean().item() / pnl.rolling(s).std().item()
+                pnl.rolling(s).mean().iloc[-1] / pnl.rolling(s).std().iloc[-1]
             )
-            output[f"{s}d_vol"] = pnl.rolling(s).std().item()
-
+            output[f"{s}d_vol"] = pnl.rolling(s).std().iloc[-1]
         output["max_drawdown"] = (pnl.cummax() - pnl).max()
         return output
 
@@ -30,11 +31,13 @@ def calculate_summary():
         w = {p["date"]: p["portfolio"] for p in portfolio if p["name"] == n}
         w = pd.DataFrame().from_dict(w).T
         pnl = (w * pct_chg).sum(axis=1)
+
         summary = metrics(pnl)
         summary["name"] = n
 
         new_index = ["name"] + summary.index.difference(["name"]).to_list()
         summary = summary.reindex(new_index)
+        summary = summary.replace(np.nan, "NaN")
 
         output.append(summary.to_dict())
     upload_json(output, "database/ranking.json")
