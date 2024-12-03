@@ -1,12 +1,3 @@
-"""
-TO-DO:
-- create multiple prompts, each one with different strategy
-- build long-only & long-short portfolios with outputs from LLMs
-
-BUGS
-- apparnt inconsistency with ``date`` in model_raw_portfolio
-"""
-
 import tiktoken
 import numpy as np
 import datetime as dt
@@ -38,7 +29,7 @@ from dataclasses import dataclass
 @dataclass
 class JSONFile:
     """
-    run `model` async & upload files sync (to avoid too much complexity)
+    CONCEPT: run `model` async & upload files sync (to avoid too much complexity)
     """
 
     data: dict | list
@@ -59,25 +50,6 @@ def load_tickers():
     return data
 
 
-def upload_portfolio(model_dump: list | dict, name, path):
-    ts = get_current_timestamp()
-
-    if isinstance(model_dump, list):
-        for r in model_dump:
-            output = {}
-            output["date"] = dt.datetime.now().strftime("%Y-%m-%d")
-            output["execution_ts"] = ts
-            output["name"] = name
-            output["portfolio"] = r
-
-            portfolio = JSONFile(
-                data=[output],
-                path=path,
-                extend=True,
-            )
-    return None
-
-
 def model() -> List[JSONFile]:
     pass
 
@@ -91,7 +63,8 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
 
     # asks llm
     values = {"date": dt.datetime.now().strftime("%Y-%m-%d")}
-    prompt_template = load_jinja_prompt("prompts/portfolio.jinja", values)
+    prompt_name = "portfolio"
+    prompt_template = load_jinja_prompt(f"prompts/{prompt_name}.jinja", values)
 
     PROMPT = """{prompt_template}
     {format_instructions}
@@ -119,61 +92,30 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
         | {"token_size": len(tokens)}
         | {"execution_ts": ts}
     )
-    raw_file = JSONFile(
+    JSONFile(
         data=[raw_output], path="database/2-model_output/model_dump.json", extend=True
     )
 
     # dump parsed
     raw_portfolio = parser.parse(output.content)
-    raw_portfolio = raw_portfolio.model_dump()
 
-    upload_portfolio(
-        raw_portfolio,
-        name="model_1",
+    JSONFile(
+        data=[
+            {
+                "name": "model_1",
+                "portfolio": raw_portfolio.model_dump(),
+                "date": dt.datetime.now().strftime("%Y-%m-%d"),
+                "execution_ts": get_current_timestamp(),
+            }
+        ],
         path="database/2-model_output/model_raw_portfolio.json",
+        extend=True,
     )
-
-    upload_portfolio(
-        build_portfolios(raw_portfolio),
-        name="model_1",
+    JSONFile(
+        data=build_portfolios(raw_portfolio, name=prompt_name),
         path="database/3-reporting/portfolio.json",
+        extend=True,
     )
-
-    return None
-
-
-def model_2(llm, tickers: List[dict], parser):
-    """
-    - one-shot
-    - asks the model to return a json-object
-    """
-    symbols = str(tuple(f'{l["symbol"]} ({l["companyName"]})' for l in tickers))
-    values = {"date": dt.datetime.now().strftime("%Y-%m-%d"), "stock_list": symbols}
-
-    PROMPT = load_jinja_prompt("prompts/model_2.jinja", values)
-
-    # send prompt to llm
-    output = llm(PROMPT)
-
-    enc = tiktoken.encoding_for_model(OPENAI_MODEL)
-    tokens = enc.encode(PROMPT)
-
-    # dump raw
-    ts = get_current_timestamp()
-    raw_output = (
-        {"prompt": PROMPT}
-        | output.model_dump()
-        | {"prompt_hash": hash_string(PROMPT)}
-        | {"token_size": len(tokens)}
-        | {"execution_ts": ts}
-    )
-    upload_json(data=[raw_output], path="database/1-raw/model_dump.json", extend=True)
-
-    # dump parsed
-    portfolio = parser.parse(output.content)
-    portfolio = portfolio.model_dump()
-    upload_portfolio(portfolio, "model_2")
-
     return None
 
 
@@ -209,7 +151,6 @@ def run(tickers: dict = None):
     )
 
     model_1(llm, tickers, parser)
-
     return None
 
 

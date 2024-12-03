@@ -65,9 +65,17 @@ def get_data():
 
     df = df.sort_values(by="marketCap", ascending=False)
     data = df.to_dict("records")
-    upload_json(data, path="database/1-raw/nasdaq.json", extend=True)
+    upload_json(data, path="database/1-raw/nasdaq.json", extend=False)
     return data
 
 
 if __name__ == "__main__":
-    get_data()
+    import os
+    import json
+
+    path = "llms/database/1-raw/nasdaq.json"
+    data = '{"first": 1}'
+    with open(path, "w") as f:
+        json.dump(data, f, sort_keys=False)
+
+    # get_data()

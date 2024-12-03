@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 from utils import load_json, upload_json
@@ -9,7 +10,7 @@ from models.portfolio import run as run_portfolio
 
 def calculate_summary():
     pct_chg = load_json("database/1-raw/nasdaq.json")
-    portfolio = load_json("database/2-model_output/model_raw_portfolio.json")
+    portfolio = load_json("database/3-reporting/portfolio.json")
 
     pct_chg = pd.DataFrame().from_dict(pct_chg)
     pct_chg = pct_chg.drop_duplicates(subset=["symbol", "date_f"])
@@ -47,7 +48,7 @@ def calculate_summary():
 
 
 def parse_data():
-    portfolio = load_json("database/2-model_output/model_raw_portfolio.json")
+    portfolio = load_json("database/3-reporting/portfolio.json")
     last_date = max([p["date"] for p in portfolio])
     exclude_list = ["date", "name", "execution_ts"]
     last_portfolio = {
@@ -64,6 +65,7 @@ def parse_data():
 
 
 def main():
+    assert "llms" in os.getcwd()
     data = get_data()
     run_portfolio(data)
     parse_data()
