@@ -102,7 +102,7 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     JSONFile(
         data=[
             {
-                "name": "model_1",
+                "name": prompt_name,
                 "portfolio": raw_portfolio.model_dump(),
                 "date": dt.datetime.now().strftime("%Y-%m-%d"),
                 "execution_ts": get_current_timestamp(),
@@ -146,7 +146,7 @@ def run(tickers: dict = None):
             content = f"```\n{output}\n```"
             return AIMessage(content)
 
-    llm = DummyChatOpenAI(
+    llm = ChatOpenAI(
         openai_api_key=OPENAI_API_KEY, model_name=OPENAI_MODEL, temperature=0
     )
 

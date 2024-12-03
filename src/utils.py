@@ -65,7 +65,7 @@ def build_portfolios(
 
     output = [
         {
-            "name": name + "long_only",
+            "name": name + "-long_only",
             "portfolio": raw_portfolio.model_construct(
                 **long_only.to_dict()
             ).model_dump(),
@@ -73,7 +73,7 @@ def build_portfolios(
             "execution_ts": get_current_timestamp(),
         },
         {
-            "name": name + "long_short",
+            "name": name + "-long_short",
             "portfolio": raw_portfolio.model_construct(
                 **long_short.to_dict()
             ).model_dump(),
