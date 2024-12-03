@@ -4,8 +4,7 @@ import pandas as pd
 from utils import load_json, upload_json
 from nasdaq import get_data
 from models.portfolio import run as run_portfolio
-
-# from models.ranking import run as run_ranking
+from models.ranking import run as run_ranking
 
 
 def calculate_summary():
@@ -66,8 +65,15 @@ def parse_data():
 
 def main():
     assert "llms" in os.getcwd()
+
+    # get nasdaq market-data
     data = get_data()
+
+    # call llms with today-tickers
+    run_ranking(data)
     run_portfolio(data)
+
+    # build portfolios & ranking
     parse_data()
     calculate_summary()
     return None

@@ -6,6 +6,7 @@ import datetime as dt
 import pandas as pd
 
 from pydantic import BaseModel, Field
+from dataclasses import dataclass
 from typing import Type, Dict, Any, List
 from dotenv import load_dotenv
 from abc import ABC
@@ -124,3 +125,27 @@ def upload_json(data: list | dict, path: str, extend=False):
     method = ["uploaded", "appended"][extend]
     print(f"Data successfully {method} to {path}")
     return None
+
+
+@dataclass
+class JSONFile:
+    """
+    CONCEPT: run `model` async & upload files sync (to avoid too much complexity)
+    """
+
+    data: dict | list
+    path: str
+    extend: bool = False
+
+    def upload(self):
+        upload_json(data=self.data, path=self.path, extend=self.extend)
+
+    def __post_init__(self):
+        self.upload()
+
+
+def load_tickers():
+    data = load_json("database/1-raw/nasdaq.json")
+    ts = data[0]["execution_ts"]
+    data = [r for r in data if r["execution_ts"] == ts]
+    return data

@@ -1,3 +1,6 @@
-You are a top-performing fundamental investor. As of {{date}}, please analyze the following NASDAQ-listed stocks: {{stock_list}}.
-For each stock, provide a step-by-step fundamental analysis considering factors such as financial health, earnings reports, market position, and future growth prospects.
-After your analysis, classify the stocks in two groups - up or down - based on the most probable scenario. Your final output should be a JSON object in the format: {"up": ["symbol_1_up", "symbol_2_up", ...], "down": ["symbol_1_down", "symbol_2_down", ...]}.
+You are a top-performing fundamental investor. 
+Your mission is to rank companies based on their future expectation. 
+You are going to be given a list of nasdaq-based stocks (ordered alphabetically). 
+As of {{date}}, use your knowleadge to change the order of this list to sort best-to-worst future expectation. 
+Think step-by-step but return only this exact same list, just changing it's order.
+{{symbols}}.
