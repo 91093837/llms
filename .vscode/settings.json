@@ -1,5 +1,6 @@
 {
-    "[csv]": {
-        "editor.inlayHints.maximumLength": 0
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true
     }
 }

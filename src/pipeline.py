@@ -1,13 +1,16 @@
+import os
 import numpy as np
 import pandas as pd
 from utils import load_json, upload_json
 from nasdaq import get_data
-from portfolio import build_portfolio
+from models.portfolio import run as run_portfolio
+
+# from models.ranking import run as run_ranking
 
 
 def calculate_summary():
-    pct_chg = load_json("database/nasdaq.json")
-    portfolio = load_json("database/model_portfolio.json")
+    pct_chg = load_json("database/1-raw/nasdaq.json")
+    portfolio = load_json("database/3-reporting/portfolio.json")
 
     pct_chg = pd.DataFrame().from_dict(pct_chg)
     pct_chg = pct_chg.drop_duplicates(subset=["symbol", "date_f"])
@@ -40,12 +43,12 @@ def calculate_summary():
         summary = summary.replace(np.nan, "NaN")
 
         output.append(summary.to_dict())
-    upload_json(output, "database/ranking.json")
+    upload_json(output, "database/3-reporting/ranking.json")
     return None
 
 
 def parse_data():
-    portfolio = load_json("database/model_portfolio.json")
+    portfolio = load_json("database/3-reporting/portfolio.json")
     last_date = max([p["date"] for p in portfolio])
     exclude_list = ["date", "name", "execution_ts"]
     last_portfolio = {
@@ -57,13 +60,14 @@ def parse_data():
         for p in portfolio
         if p["date"] == last_date
     }
-    upload_json(last_portfolio, "database/last_portfolio.json")
+    upload_json(last_portfolio, "database/3-reporting/last_portfolio.json")
     return None
 
 
 def main():
+    assert "llms" in os.getcwd()
     data = get_data()
-    build_portfolio(data)
+    run_portfolio(data)
     parse_data()
     calculate_summary()
     return None
