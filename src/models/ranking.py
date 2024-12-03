@@ -4,5 +4,5 @@ TO-DO:
 - build long-only & long-short portfolios with outputs from LLMs
 
 BUGS
-- apparnt inconsistency with ``date`` in model_portfolio
+- apparnt inconsistency with ``date`` in model_raw_portfolio
 """

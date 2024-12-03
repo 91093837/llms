@@ -2,13 +2,14 @@ import numpy as np
 import pandas as pd
 from utils import load_json, upload_json
 from nasdaq import get_data
-from portfolio import run as run_portfolio
-from ranking import run as run_ranking
+from models.portfolio import run as run_portfolio
+
+# from models.ranking import run as run_ranking
 
 
 def calculate_summary():
     pct_chg = load_json("database/1-raw/nasdaq.json")
-    portfolio = load_json("database/2-model_output/model_portfolio.json")
+    portfolio = load_json("database/2-model_output/model_raw_portfolio.json")
 
     pct_chg = pd.DataFrame().from_dict(pct_chg)
     pct_chg = pct_chg.drop_duplicates(subset=["symbol", "date_f"])
@@ -46,7 +47,7 @@ def calculate_summary():
 
 
 def parse_data():
-    portfolio = load_json("database/2-model_output/model_portfolio.json")
+    portfolio = load_json("database/2-model_output/model_raw_portfolio.json")
     last_date = max([p["date"] for p in portfolio])
     exclude_list = ["date", "name", "execution_ts"]
     last_portfolio = {
