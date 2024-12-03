@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from utils import load_json, upload_json
 from nasdaq import get_data
-from portfolio import build_portfolio
+from portfolio import run
 
 
 def calculate_summary():
@@ -63,7 +63,7 @@ def parse_data():
 
 def main():
     data = get_data()
-    build_portfolio(data)
+    run(data)
     parse_data()
     calculate_summary()
     return None

@@ -1,3 +1,12 @@
+"""
+TO-DO:
+- create multiple prompts, each one with different strategy
+- build long-only & long-short portfolios with outputs from LLMs
+
+BUGS
+- apparnt inconsistency with ``date`` in model_portfolio
+"""
+
 import tiktoken
 import datetime as dt
 from typing import List
@@ -21,24 +30,62 @@ from langchain.prompts.chat import (
 from langchain.output_parsers import PydanticOutputParser
 from langchain_openai import ChatOpenAI
 from langchain_core.messages.ai import AIMessage
+from dataclasses import dataclass
+
+
+@dataclass
+class JSONFile:
+    """
+    run `model` async & upload files sync (to avoid too much complexity)
+    """
+
+    data: dict | list
+    path: str
+    extend: bool = False
+
+    def upload(self):
+        upload_json(data=self.data, path=self.path, extend=self.extend)
+
+    def __post_init__(self):
+        self.upload()
 
 
 def load_tickers():
     data = load_json("database/nasdaq.json")
-    ts = data[0]["ts"]
-    data = [r for r in data if r["ts"] == ts]
+    ts = data[0]["execution_ts"]
+    data = [r for r in data if r["execution_ts"] == ts]
     return data
 
 
-def model_1(llm, tickers: List[dict], parser):
+def upload_portfolio(model_dump, name):
+    ts = get_current_timestamp()
+
+    output = {}
+    output["date"] = dt.datetime.now().strftime("%Y-%m-%d")
+    output["execution_ts"] = ts
+    output["name"] = name
+    output["portfolio"] = model_dump
+
+    portfolio = JSONFile(
+        data=[output], path="database/model_portfolio.json", extend=True
+    )
+    return portfolio
+
+
+def model() -> List[JSONFile]:
+    pass
+
+
+def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     """
     - one-shot
-    - uses pydantic_object to format output
+    - asks directly to return a portfolio with all nasdaq stocks
+    - with format_instructions
     """
 
     # asks llm
     values = {"date": dt.datetime.now().strftime("%Y-%m-%d")}
-    prompt_template = load_jinja_prompt("prompts/per-market-fundamental.jinja", values)
+    prompt_template = load_jinja_prompt("prompts/model_1.jinja", values)
 
     PROMPT = """{prompt_template}
     {format_instructions}
@@ -59,7 +106,6 @@ def model_1(llm, tickers: List[dict], parser):
 
     # dump raw
     ts = get_current_timestamp()
-
     raw_output = (
         chat_prompt_with_values.model_dump()
         | output.model_dump()
@@ -67,18 +113,13 @@ def model_1(llm, tickers: List[dict], parser):
         | {"token_size": len(tokens)}
         | {"execution_ts": ts}
     )
-    upload_json(data=[raw_output], path="database/model_dump.json", extend=True)
+    raw_file = JSONFile(data=[raw_output], path="database/model_dump.json", extend=True)
 
     # dump parsed
     portfolio = parser.parse(output.content)
     portfolio = portfolio.model_dump()
 
-    output = {}
-    output["date"] = dt.datetime.now().strftime("%Y-%m-%d")
-    output["execution_ts"] = ts
-    output["name"] = "model_1"
-    output["portfolio"] = portfolio
-    upload_json(data=[output], path="database/model_portfolio.json", extend=True)
+    portfolio_file = upload_portfolio(portfolio, "model_1")
     return None
 
 
@@ -87,10 +128,10 @@ def model_2(llm, tickers: List[dict], parser):
     - one-shot
     - asks the model to return a json-object
     """
-    symbols = [l["symbol"] for l in tickers]
+    symbols = str(tuple(f'{l["symbol"]} ({l["companyName"]})' for l in tickers))
     values = {"date": dt.datetime.now().strftime("%Y-%m-%d"), "stock_list": symbols}
-    prompt_template = load_jinja_prompt("prompts/per-market-fundamental.jinja", values)
-    PROMPT = """{prompt_template}"""
+
+    PROMPT = load_jinja_prompt("prompts/model_2.jinja", values)
 
     # send prompt to llm
     output = llm(PROMPT)
@@ -100,7 +141,6 @@ def model_2(llm, tickers: List[dict], parser):
 
     # dump raw
     ts = get_current_timestamp()
-
     raw_output = (
         {"prompt": PROMPT}
         | output.model_dump()
@@ -113,13 +153,7 @@ def model_2(llm, tickers: List[dict], parser):
     # dump parsed
     portfolio = parser.parse(output.content)
     portfolio = portfolio.model_dump()
-
-    output = {}
-    output["date"] = dt.datetime.now().strftime("%Y-%m-%d")
-    output["execution_ts"] = ts
-    output["name"] = "model_1"
-    output["portfolio"] = portfolio
-    upload_json(data=[output], path="database/model_portfolio.json", extend=True)
+    upload_portfolio(portfolio, "model_2")
 
     return None
 
@@ -131,7 +165,10 @@ def model_3():
     return None
 
 
-def run(tickers: dict):
+def run(tickers: dict = None):
+    if not tickers:
+        tickers = load_tickers()
+
     # building portfolio model
     symbols = [l["symbol"] for l in tickers]
     fields = {s: float for s in symbols}
@@ -151,10 +188,12 @@ def run(tickers: dict):
             content = f"```\n{output}\n```"
             return AIMessage(content)
 
-    llm = ChatOpenAI(
+    llm = DummyChatOpenAI(
         openai_api_key=OPENAI_API_KEY, model_name=OPENAI_MODEL, temperature=0
     )
-    model_1(llm, tickers, parser)
+
+    # model_1(llm, tickers, parser)
+    model_2(llm, tickers, parser)
 
     return None
 
