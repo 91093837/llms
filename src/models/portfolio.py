@@ -6,48 +6,20 @@ from utils import (
     OPENAI_API_KEY,
     OPENAI_MODEL,
     create_model,
-    load_prompt,
     load_jinja_prompt,
     get_current_timestamp,
-    load_json,
-    upload_json,
     hash_string,
     build_portfolios,
+    JSONFile,
+    load_tickers,
 )
-from pydantic import BaseModel
 from langchain.prompts.chat import (
     ChatPromptTemplate,
-    AIMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
 from langchain.output_parsers import PydanticOutputParser
 from langchain_openai import ChatOpenAI
 from langchain_core.messages.ai import AIMessage
-from dataclasses import dataclass
-
-
-@dataclass
-class JSONFile:
-    """
-    CONCEPT: run `model` async & upload files sync (to avoid too much complexity)
-    """
-
-    data: dict | list
-    path: str
-    extend: bool = False
-
-    def upload(self):
-        upload_json(data=self.data, path=self.path, extend=self.extend)
-
-    def __post_init__(self):
-        self.upload()
-
-
-def load_tickers():
-    data = load_json("database/1-raw/nasdaq.json")
-    ts = data[0]["execution_ts"]
-    data = [r for r in data if r["execution_ts"] == ts]
-    return data
 
 
 def model() -> List[JSONFile]:
@@ -146,7 +118,7 @@ def run(tickers: dict = None):
             content = f"```\n{output}\n```"
             return AIMessage(content)
 
-    llm = ChatOpenAI(
+    llm = DummyChatOpenAI(
         openai_api_key=OPENAI_API_KEY, model_name=OPENAI_MODEL, temperature=0
     )
 
