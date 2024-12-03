@@ -51,7 +51,7 @@ class JSONFile:
 
 
 def load_tickers():
-    data = load_json("database/nasdaq.json")
+    data = load_json("database/1-raw/nasdaq.json")
     ts = data[0]["execution_ts"]
     data = [r for r in data if r["execution_ts"] == ts]
     return data
@@ -67,7 +67,7 @@ def upload_portfolio(model_dump, name):
     output["portfolio"] = model_dump
 
     portfolio = JSONFile(
-        data=[output], path="database/model_portfolio.json", extend=True
+        data=[output], path="database/2-model_output/model_portfolio.json", extend=True
     )
     return portfolio
 
@@ -113,7 +113,9 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
         | {"token_size": len(tokens)}
         | {"execution_ts": ts}
     )
-    raw_file = JSONFile(data=[raw_output], path="database/model_dump.json", extend=True)
+    raw_file = JSONFile(
+        data=[raw_output], path="database/2-model_output/model_dump.json", extend=True
+    )
 
     # dump parsed
     portfolio = parser.parse(output.content)
@@ -148,7 +150,7 @@ def model_2(llm, tickers: List[dict], parser):
         | {"token_size": len(tokens)}
         | {"execution_ts": ts}
     )
-    upload_json(data=[raw_output], path="database/model_dump.json", extend=True)
+    upload_json(data=[raw_output], path="database/1-raw/model_dump.json", extend=True)
 
     # dump parsed
     portfolio = parser.parse(output.content)

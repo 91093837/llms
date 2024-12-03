@@ -1,12 +1,14 @@
-from pydantic import BaseModel, Field
-from typing import Type, Dict, Any
-
 import os
 import json
 import jinja2
 import hashlib
 import datetime as dt
+import pandas as pd
+
+from pydantic import BaseModel, Field
+from typing import Type, Dict, Any, List
 from dotenv import load_dotenv
+from abc import ABC
 
 load_dotenv()
 
@@ -37,6 +39,23 @@ def create_model(
     class_body["__annotations__"] = annotations
     model = type(name, (BaseModel,), class_body)
     return model
+
+
+class AbstractPortfolio(ABC):
+    pass
+
+
+def build_portfolios(raw_portfolio: AbstractPortfolio) -> List[AbstractPortfolio]:
+    S = pd.Series(raw_portfolio.model_dump())
+    long_only = S / S.sum()
+
+    long_short = S - S.mean()
+    long_short = long_short / long_short.abs().sum()
+
+    output = [
+        raw_portfolio.model_construct(**x.to_dict()) for x in [long_only, long_short]
+    ]
+    return output
 
 
 # def create_model(name: str, fields: Dict[str, Any]) -> Type[BaseModel]:
