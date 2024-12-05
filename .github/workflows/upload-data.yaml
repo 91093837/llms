@@ -35,13 +35,16 @@ jobs:
       - name: Copy file to website
         run: |
           ls -la
-          cp -Rf /database/ website-repo/website/src/data
+          cp -Rf database/ website-repo/website/src/data
 
       - name: Commit and Push 
         run: |
-          cd website-repo
           git config --global user.email "auto@robot.xyz"
           git config --global user.name "ci/cd"
-          git add database.txt
+          git add .
+          git commit -m "update data"
+          git push origin main
+          cd website-repo
+          git add .
           git commit -m "update data"
           git push origin main
