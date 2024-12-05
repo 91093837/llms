@@ -4,7 +4,9 @@ import jinja2
 import hashlib
 import datetime as dt
 import pandas as pd
+import logging
 
+from functools import wraps
 from pydantic import BaseModel, Field
 from dataclasses import dataclass
 from typing import Type, Dict, Any, List
@@ -16,6 +18,26 @@ load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY") or "fake-it-until-you-make-it"
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 OPENAI_MODEL = "gpt-3.5-turbo"
+
+
+logging.basicConfig(
+    filename="session.log",
+    filemode="a",
+    level=logging.ERROR,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
+
+def ignore_exception(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logging.error(f"An error occurred in function '{func.__name__}': {e}")
+            return None
+
+    return wrapper
 
 
 def get_current_timestamp():

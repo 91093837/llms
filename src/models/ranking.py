@@ -13,6 +13,7 @@ from utils import (
     build_portfolios,
     JSONFile,
     load_tickers,
+    ignore_exception,
 )
 from langchain.prompts.chat import (
     ChatPromptTemplate,
@@ -88,6 +89,7 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     return None
 
 
+@ignore_exception
 def run(tickers: dict = None):
     if not tickers:
         tickers = load_tickers()
