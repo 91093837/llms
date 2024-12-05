@@ -15,6 +15,7 @@ from utils import (
     load_tickers,
     ignore_exception,
 )
+import logging
 from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
@@ -34,10 +35,11 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     """
 
     prompt_name = "ranking"
-    symbols = str([l["symbol"] for l in tickers]).replace("'", "")
+    symbols = [l["symbol"] for l in tickers]
+    symbols_str = str(symbols).replace("'", "")
     values = {
         "date": dt.datetime.now().strftime("%Y-%m-%d"),
-        "symbols": symbols,
+        "symbols": symbols_str,
     }
     PROMPT = load_jinja_prompt(f"prompts/{prompt_name}.jinja", values)
 
@@ -67,6 +69,11 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     # dump parsed
     content = re.sub(r"[^a-zA-Z0-9\s]", "", output.content).split()
     content = {content[i]: (len(content) - i) for i in range(len(content))}
+    diff = set(content.keys()).symmetric_difference(symbols)
+    if len(diff) > 0:
+        logging.warning(f"failed to maintain structure, new {diff}")
+    content = content | {k: 0 for k in diff}
+    content = {k: v for k, v in content.items() if k in symbols}
     raw_portfolio = parser.pydantic_object(**content)
 
     JSONFile(
@@ -112,7 +119,7 @@ def run(tickers: dict = None):
             content = f"```\n{output}\n```"
             return AIMessage(content)
 
-    llm = DummyChatOpenAI(
+    llm = ChatOpenAI(
         openai_api_key=OPENAI_API_KEY, model_name=OPENAI_MODEL, temperature=0
     )
 

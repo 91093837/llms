@@ -23,7 +23,7 @@ OPENAI_MODEL = "gpt-3.5-turbo"
 logging.basicConfig(
     filename="session.log",
     filemode="a",
-    level=logging.ERROR,
+    level=logging.WARNING,
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
@@ -34,7 +34,9 @@ def ignore_exception(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            logging.error(f"An error occurred in function '{func.__name__}': {e}")
+            logging.error(
+                f"An error occurred in function '{func.__name__}': {e} // {e.__traceback__}"
+            )
             return None
 
     return wrapper

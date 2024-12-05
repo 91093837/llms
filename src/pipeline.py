@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
+import logging
 from utils import load_json, upload_json
 from nasdaq import get_data
 from models.portfolio import run as run_portfolio

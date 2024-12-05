@@ -70,12 +70,4 @@ def get_data():
 
 
 if __name__ == "__main__":
-    import os
-    import json
-
-    path = "llms/database/1-raw/nasdaq.json"
-    data = '{"first": 1}'
-    with open(path, "w") as f:
-        json.dump(data, f, sort_keys=False)
-
-    # get_data()
+    get_data()

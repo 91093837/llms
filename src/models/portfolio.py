@@ -120,7 +120,7 @@ def run(tickers: dict = None):
             content = f"```\n{output}\n```"
             return AIMessage(content)
 
-    llm = DummyChatOpenAI(
+    llm = ChatOpenAI(
         openai_api_key=OPENAI_API_KEY, model_name=OPENAI_MODEL, temperature=0
     )
 
