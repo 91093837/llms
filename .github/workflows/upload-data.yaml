@@ -27,6 +27,7 @@ jobs:
           python src/pipeline.py
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          IS_PROD: ${{ secrets.IS_PROD }}
 
       - name: Clone website
         run: |
