@@ -18,7 +18,7 @@ load_dotenv()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY") or "fake-it-until-you-make-it"
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 OPENAI_MODEL = "gpt-3.5-turbo"
-
+DATABASE_NAME = "prod-database" if os.environ.get("is_prod") else "dev-database"
 
 logging.basicConfig(
     filename="session.log",
@@ -169,7 +169,7 @@ class JSONFile:
 
 
 def load_tickers():
-    data = load_json("database/1-raw/nasdaq.json")
+    data = load_json(f"{DATABASE_NAME}/1-raw/nasdaq.json")
     ts = data[0]["execution_ts"]
     data = [r for r in data if r["execution_ts"] == ts]
     return data

@@ -35,7 +35,7 @@ jobs:
       - name: Copy file to website
         run: |
           ls -la
-          cp -Rf database/ website-repo/website/src/data
+          cp -Rf prod-database/ website-repo/website/src/data
 
       - name: Commit and Push 
         run: |

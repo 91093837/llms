@@ -6,6 +6,7 @@ from typing import List
 from utils import (
     OPENAI_API_KEY,
     OPENAI_MODEL,
+    DATABASE_NAME,
     create_model,
     load_jinja_prompt,
     get_current_timestamp,
@@ -63,7 +64,9 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
         | {"execution_ts": ts}
     )
     JSONFile(
-        data=[raw_output], path="database/2-model_output/model_dump.json", extend=True
+        data=[raw_output],
+        path=f"{DATABASE_NAME}/2-model_output/model_dump.json",
+        extend=True,
     )
 
     # dump parsed
@@ -85,12 +88,12 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
                 "execution_ts": get_current_timestamp(),
             }
         ],
-        path="database/2-model_output/model_raw_portfolio.json",
+        path=f"{DATABASE_NAME}/2-model_output/model_raw_portfolio.json",
         extend=True,
     )
     JSONFile(
         data=build_portfolios(raw_portfolio, name=prompt_name),
-        path="database/3-reporting/portfolio.json",
+        path=f"{DATABASE_NAME}/3-reporting/portfolio.json",
         extend=True,
     )
     return None
