@@ -1,4 +1,4 @@
-name: Upload data to website
+name: upload data to website
 
 on:
   schedule:
@@ -10,42 +10,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: set up python
         uses: actions/setup-python@v4
         with:
           python-version: '3.12'
           
-      - name: Install dependencies
+      - name: install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run pipeline
+      - name: run pipeline
         run: |
           python src/pipeline.py
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          IS_PROD: ${{ secrets.IS_PROD }}
+          openai_api_key: ${{ secrets.openai_api_key }}
+          is_prod: ${{ secrets.is_prod }}
 
-      - name: Clone website
+      - name: clone website
         run: |
-          git clone https://${{ secrets.REPO_TOKEN }}@github.com/can-be-anything/website.git website-repo
+          git clone https://${{ secrets.repo_token }}@github.com/can-be-anything/website.git website-repo
 
-      - name: Copy file to website
+      - name: copy file to website
         run: |
           ls -la
-          cp -Rf prod-database/ website-repo/website/src/data
+          mkdir -p website-repo/website/src/data/
+          cp -rf prod-database/ website-repo/website/src/data/
 
-      - name: Commit and Push 
+      - name: commit and push 
         run: |
           git config --global user.email "auto@robot.xyz"
           git config --global user.name "ci/cd"
           git add .
           git commit -m "update data"
           git push origin main
+
+      - name: commit and push website 
+        run: |
           cd website-repo
           git add .
           git commit -m "update data"
