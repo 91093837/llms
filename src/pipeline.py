@@ -8,6 +8,17 @@ from models.portfolio import run as run_portfolio
 from models.ranking import run as run_ranking
 
 
+from pathlib import Path
+
+paths = [
+    f"{DATABASE_NAME}/1-raw",
+    f"{DATABASE_NAME}/2-model_output",
+    f"{DATABASE_NAME}/3-reporting",
+]
+for path in paths:
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+
+
 def calculate_summary():
     pct_chg = load_json(f"{DATABASE_NAME}/1-raw/nasdaq.json")
     portfolio = load_json(f"{DATABASE_NAME}/3-reporting/portfolio.json")
