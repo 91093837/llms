@@ -34,7 +34,7 @@ def ignore_exception(func):
             return func(*args, **kwargs)
         except Exception as e:
             logging.error(
-                f"An error occurred in function '{func.__name__}': {e} // {e.__traceback__}"
+                f"An error occurred in function '{func.__name__}': {e.with_traceback()}"
             )
             return None
 
