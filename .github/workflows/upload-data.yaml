@@ -25,8 +25,7 @@ jobs:
 
       - name: Run pipeline
         run: |
-          ls -la
-          python -m src.pipeline
+          python src/pipeline.py
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           IS_PROD: ${{ secrets.IS_PROD }}
