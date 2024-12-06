@@ -16,7 +16,7 @@ paths = [
     f"{DATABASE_NAME}/3-reporting",
 ]
 for path in paths:
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    Path(path).mkdir(parents=True, exist_ok=True)
 
 
 def calculate_summary():
