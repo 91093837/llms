@@ -22,10 +22,8 @@ DATABASE_NAME = "prod-database" if os.environ.get("IS_PROD") else "dev-database"
 os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
 logging.basicConfig(
-    filename="session.log",
-    filemode="a",
     level=logging.WARNING,
-    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("session.log", mode="a"), logging.StreamHandler()],
 )
 
 
@@ -129,10 +127,8 @@ def load_prompt(path: str):
 
 def load_json(path):
     assert ".json" in path
-
-    if os.path.exists(path):
-        with open(path, "r") as file:
-            data = json.load(file)
+    with open(path, "r") as file:
+        data = json.load(file)
     return data
 
 
