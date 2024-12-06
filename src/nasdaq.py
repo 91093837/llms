@@ -65,7 +65,7 @@ def get_data():
 
     df = df.sort_values(by="marketCap", ascending=False)
     data = df.to_dict("records")
-    upload_json(data, path=f"{DATABASE_NAME}/1-raw/nasdaq.json", extend=False)
+    upload_json(data, path=f"{DATABASE_NAME}/1-raw/nasdaq.json", extend=True)
     return data
 
 

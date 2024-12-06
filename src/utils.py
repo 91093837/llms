@@ -15,10 +15,11 @@ from abc import ABC
 
 load_dotenv()
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY") or "fake-it-until-you-make-it"
-os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 OPENAI_MODEL = "gpt-3.5-turbo"
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY") or "fake-it-until-you-make-it"
 DATABASE_NAME = "prod-database" if os.environ.get("IS_PROD") else "dev-database"
+
+os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
 logging.basicConfig(
     filename="session.log",
