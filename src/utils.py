@@ -119,6 +119,12 @@ def build_portfolios(
     long_short = long_short / long_short.abs().sum()
     long_short = long_short.round(5)
 
+    quantile = S.rank(pct=True)
+    quantile = quantile.round(2)
+    quantile = quantile.apply(lambda x: 1 if x > 0.75 else -1 if x < 0.25 else 0)
+    quantile = quantile.loc[quantile != 0] / quantile.loc[quantile != 0].abs().sum
+    quantile = quantile.round(5)
+
     output = [
         {
             "name": name + "/long_only",
@@ -132,6 +138,14 @@ def build_portfolios(
             "name": name + "/long_short",
             "portfolio": raw_portfolio.model_construct(
                 **long_short.to_dict()
+            ).model_dump(),
+            "date": dt.datetime.now().strftime("%Y-%m-%d"),
+            "execution_ts": get_current_timestamp(),
+        },
+        {
+            "name": name + "/quantile",
+            "portfolio": raw_portfolio.model_construct(
+                **quantile.to_dict()
             ).model_dump(),
             "date": dt.datetime.now().strftime("%Y-%m-%d"),
             "execution_ts": get_current_timestamp(),
