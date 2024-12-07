@@ -79,7 +79,7 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     content = {k: v for k, v in content.items() if k in symbols}
     raw_portfolio = parser.pydantic_object(**content)
 
-    name = f"{OPENAI_MODEL}-{prompt_name}"
+    name = f"{OPENAI_MODEL}/{prompt_name}"
     JSONFile(
         data=[
             {

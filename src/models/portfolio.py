@@ -75,7 +75,7 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     # dump parsed
     raw_portfolio = parser.parse(output.content)
 
-    name = f"{OPENAI_MODEL}-{prompt_name}"
+    name = f"{OPENAI_MODEL}/{prompt_name}"
     JSONFile(
         data=[
             {

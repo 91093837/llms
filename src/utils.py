@@ -2,6 +2,7 @@ import os
 import json
 import jinja2
 import hashlib
+import numpy as np
 import datetime as dt
 import pandas as pd
 import logging
@@ -23,6 +24,38 @@ logging.basicConfig(
     level=logging.WARNING,
     handlers=[logging.FileHandler("session.log", mode="a"), logging.StreamHandler()],
 )
+
+
+class NumpyEncoder(json.JSONEncoder):
+    """Custom encoder for numpy data types"""
+
+    def default(self, obj):
+        if isinstance(
+            obj,
+            (
+                np.int_,
+                np.intc,
+                np.intp,
+                np.int8,
+                np.int16,
+                np.int32,
+                np.int64,
+                np.uint8,
+                np.uint16,
+                np.uint32,
+                np.uint64,
+            ),
+        ):
+            return int(obj)
+        elif isinstance(obj, (np.float_, np.float16, np.float32, np.float64)):
+            return round(float(obj), 4)
+        elif isinstance(obj, (np.ndarray,)):
+            return obj.tolist()
+        elif isinstance(obj, (np.bool_)):
+            return bool(obj)
+        elif isinstance(obj, (np.void)):
+            return None
+        return json.JSONEncoder.default(self, obj)
 
 
 def ignore_exception(func):
@@ -81,13 +114,14 @@ def build_portfolios(
     long_only = S / S.sum()
     long_only = long_only.round(5)
 
-    long_short = S - S.mean()
+    securities = S[(S != 0)].index
+    long_short = S.loc[securities] - S.loc[securities].mean()
     long_short = long_short / long_short.abs().sum()
     long_short = long_short.round(5)
 
     output = [
         {
-            "name": name + "-long_only",
+            "name": name + "/long_only",
             "portfolio": raw_portfolio.model_construct(
                 **long_only.to_dict()
             ).model_dump(),
@@ -95,7 +129,7 @@ def build_portfolios(
             "execution_ts": get_current_timestamp(),
         },
         {
-            "name": name + "-long_short",
+            "name": name + "/long_short",
             "portfolio": raw_portfolio.model_construct(
                 **long_short.to_dict()
             ).model_dump(),
@@ -139,7 +173,7 @@ def upload_json(data: list | dict, path: str, extend=False):
         data = existing_data + data
 
     with open(path, "w") as f:
-        json.dump(data, f, sort_keys=False)
+        json.dump(data, f, sort_keys=False, cls=NumpyEncoder)
 
     method = ["uploaded", "appended"][extend]
     print(f"Data successfully {method} to {path}")
