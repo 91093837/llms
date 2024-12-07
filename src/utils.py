@@ -22,6 +22,7 @@ DATABASE_NAME = "prod-database" if os.environ.get("IS_PROD") else "dev-database"
 
 logging.basicConfig(
     level=logging.WARNING,
+    format="%(asctime)s %(levelname)s %(message)s",
     handlers=[logging.FileHandler("session.log", mode="a"), logging.StreamHandler()],
 )
 
@@ -120,9 +121,8 @@ def build_portfolios(
     long_short = long_short.round(5)
 
     quantile = S.rank(pct=True)
-    quantile = quantile.round(2)
-    quantile = quantile.apply(lambda x: 1 if x > 0.75 else -1 if x < 0.25 else 0)
-    quantile = quantile.loc[quantile != 0] / quantile.loc[quantile != 0].abs().sum
+    quantile = quantile.apply(lambda x: 1 if x > 0.75 else -1 if x <= 0.25 else 0)
+    quantile = quantile / quantile.abs().sum()
     quantile = quantile.round(5)
 
     output = [
