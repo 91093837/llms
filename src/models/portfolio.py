@@ -75,10 +75,11 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     # dump parsed
     raw_portfolio = parser.parse(output.content)
 
+    name = f"{OPENAI_MODEL}-{prompt_name}"
     JSONFile(
         data=[
             {
-                "name": prompt_name,
+                "name": name,
                 "portfolio": raw_portfolio.model_dump(),
                 "date": dt.datetime.now().strftime("%Y-%m-%d"),
                 "execution_ts": get_current_timestamp(),
@@ -88,7 +89,7 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
         extend=True,
     )
     JSONFile(
-        data=build_portfolios(raw_portfolio, name=prompt_name),
+        data=build_portfolios(raw_portfolio, name=name),
         path=f"{DATABASE_NAME}/3-reporting/portfolio.json",
         extend=True,
     )

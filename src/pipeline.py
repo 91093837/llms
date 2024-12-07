@@ -49,9 +49,9 @@ def calculate_summary():
         summary = metrics(pnl)
         summary["name"] = n
 
-        new_index = ["name"] + summary.index.difference(["name"]).to_list()
+        new_index = ["name"] + summary.index.difference(["name"], sort=False).to_list()
         summary = summary.reindex(new_index)
-        summary = summary.replace(np.nan, "NaN")
+        summary = summary.replace(np.nan, "NaN").replace(0, "NaN")
 
         output.append(summary.to_dict())
     upload_json(output, f"{DATABASE_NAME}/3-reporting/ranking.json")
