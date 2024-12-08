@@ -112,7 +112,8 @@ def build_portfolios(
     raw_portfolio: AbstractPortfolio, name: str
 ) -> List[AbstractPortfolio]:
     S = pd.Series(raw_portfolio.model_dump())
-    long_only = S / S.sum()
+    long_only = S.clip(lower=0)
+    long_only = long_only / long_only.sum()
     long_only = long_only.round(5)
 
     securities = S[(S != 0)].index
