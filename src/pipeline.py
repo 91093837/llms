@@ -119,14 +119,16 @@ def main():
     # # get nasdaq market-data
     data = get_data()
 
-    # # call llms with today-tickers
-    run_ranking(data)
-    run_portfolio(data)
+    if data["market_open"].all():
+        # # call llms with today-tickers
+        run_ranking(data)
+        run_portfolio(data)
 
-    # build portfolios & ranking
-    build_market_index()
-    parse_data()
-    calculate_summary()
+        # build portfolios & ranking
+        build_market_index()
+        parse_data()
+        calculate_summary()
+
     return None
 
 

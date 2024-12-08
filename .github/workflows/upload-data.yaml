@@ -2,7 +2,8 @@ name: upload data to website
 
 on:
   schedule:
-    - cron: '0 15 * * 1-5'
+    - cron: '0 15 * * 1-5' # 9:30am EST + 30m
+    - cron: '0 22 * * 1-5' # 4:00pm EST + 1h
   workflow_dispatch:
 
 jobs:
