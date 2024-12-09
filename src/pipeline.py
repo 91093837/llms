@@ -119,7 +119,7 @@ def main():
     # # get nasdaq market-data
     data = get_data()
 
-    if data["market_open"].all():
+    if data[-1]["market_open"]:
         # # call llms with today-tickers
         run_ranking(data)
         run_portfolio(data)
