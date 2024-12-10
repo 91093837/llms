@@ -1,7 +1,7 @@
 import tiktoken
 import datetime as dt
 
-from tiktoken import MODEL_PREFIX_TO_ENCODING
+from tiktoken.model import MODEL_PREFIX_TO_ENCODING
 from typing import List
 from utils import (
     MODELS,
@@ -26,6 +26,7 @@ def model() -> List[JSONFile]:
     pass
 
 
+@ignore_exception
 def model_1(llm, config) -> List[JSONFile]:
     """
     - one-shot
@@ -52,7 +53,7 @@ def model_1(llm, config) -> List[JSONFile]:
     )
 
     # send prompt to llm
-    output = llm(chat_prompt_with_values.to_messages())
+    output = llm.invoke(chat_prompt_with_values.to_messages())
 
     # dump raw
     ts = get_current_timestamp()
@@ -98,7 +99,6 @@ def model_1(llm, config) -> List[JSONFile]:
     return None
 
 
-@ignore_exception
 def run(tickers: dict = None):
     if not tickers:
         tickers = load_tickers()
@@ -113,9 +113,8 @@ def run(tickers: dict = None):
     parser = PydanticOutputParser(pydantic_object=Portfolio)
 
     for name, conf in MODELS.items():
-        llm = conf["chat"]
         for model_name in conf["models"]:
-            llm(model_name=model_name, temperature=0)
+            llm = conf["chat"](model_name=model_name, temperature=0, top_p=1)
             model_1(
                 llm,
                 config={"tickers": tickers, "parser": parser, "model_name": model_name},

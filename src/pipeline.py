@@ -1,8 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
-import logging
-from utils import load_json, upload_json, DATABASE_NAME, JSONFile
+from utils import load_json, DATABASE_NAME, JSONFile
 from nasdaq import get_data
 from models.portfolio import run as run_portfolio
 from models.ranking import run as run_ranking
@@ -26,20 +25,20 @@ def build_market_index():
     market_data = pd.DataFrame().from_dict(market_data)
 
     market_data["nasdaq_index"] = (
-        market_data.groupby("date_f")["marketCap"]
+        market_data.groupby("datetime_f")["marketCap"]
         .apply(lambda v: v.div(v.sum()))
         .values
     )
     market_data["equal_weight"] = (
-        market_data.groupby("date_f")["marketCap"]
+        market_data.groupby("datetime_f")["marketCap"]
         .apply(lambda v: v.div(v).div(v.shape[0]))
         .values
     )
 
     output = []
-    dates = market_data["date_f"].unique()
+    dates = market_data["datetime_f"].unique()
     for date in dates:
-        date_slice = market_data.loc[market_data["date_f"] == date, :]
+        date_slice = market_data.loc[market_data["datetime_f"] == date, :]
         for col in ["nasdaq_index", "equal_weight"]:
             output.append(
                 {
@@ -121,7 +120,7 @@ def parse_data():
 def main():
     assert "llms" in os.getcwd()
 
-    # # get nasdaq market-data
+    # get nasdaq market-data
     data = get_data()
 
     if data[-1]["market_open"]:
@@ -129,10 +128,10 @@ def main():
         run_ranking(data)
         run_portfolio(data)
 
-        # build portfolios & ranking
-        build_market_index()
-        parse_data()
-        calculate_summary()
+    # build portfolios & ranking
+    build_market_index()
+    parse_data()
+    calculate_summary()
 
     return None
 

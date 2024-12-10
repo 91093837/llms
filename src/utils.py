@@ -2,6 +2,7 @@ import os
 import json
 import jinja2
 import hashlib
+import traceback
 import numpy as np
 import datetime as dt
 import pandas as pd
@@ -15,7 +16,6 @@ from dotenv import load_dotenv
 from abc import ABC
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
-from langchain_core.messages.ai import AIMessage
 
 load_dotenv()
 
@@ -99,9 +99,8 @@ def ignore_exception(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            logging.error(
-                f"An error occurred in function '{func.__name__}': {e.with_traceback()}"
-            )
+            tb_str = traceback.format_exc()
+            logging.error(f"An error occurred in function '{func.__name__}': {tb_str}")
             return None
 
     return wrapper

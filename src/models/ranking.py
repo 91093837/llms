@@ -3,7 +3,7 @@ import logging
 import tiktoken
 import datetime as dt
 
-from tiktoken import MODEL_PREFIX_TO_ENCODING
+from tiktoken.model import MODEL_PREFIX_TO_ENCODING
 from typing import List
 from utils import (
     MODELS,
@@ -28,6 +28,7 @@ def model() -> List[JSONFile]:
     pass
 
 
+@ignore_exception
 def model_1(llm, config: dict) -> List[JSONFile]:
     """
     - one-shot
@@ -48,7 +49,7 @@ def model_1(llm, config: dict) -> List[JSONFile]:
     chat_prompt_with_values = chat_prompt.format_prompt()
 
     # send prompt to llm
-    output = llm(chat_prompt_with_values.to_messages())
+    output = llm.invoke(chat_prompt_with_values.to_messages())
 
     enc = tiktoken.encoding_for_model(config["model_name"])
     tokens = enc.encode(chat_prompt_with_values.to_string())
@@ -104,7 +105,6 @@ def model_1(llm, config: dict) -> List[JSONFile]:
     return None
 
 
-@ignore_exception
 def run(tickers: dict = None):
     if not tickers:
         tickers = load_tickers()
@@ -120,7 +120,7 @@ def run(tickers: dict = None):
 
     for name, conf in MODELS.items():
         for model_name in conf["models"]:
-            llm = conf["chat"](model_name=model_name, temperature=0)
+            llm = conf["chat"](model_name=model_name, temperature=0, top_p=1)
             model_1(
                 llm,
                 config={"tickers": tickers, "parser": parser, "model_name": model_name},
