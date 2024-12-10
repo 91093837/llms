@@ -13,10 +13,44 @@ from dataclasses import dataclass
 from typing import Type, Dict, Any, List
 from dotenv import load_dotenv
 from abc import ABC
+from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+from langchain_core.messages.ai import AIMessage
 
 load_dotenv()
 
-OPENAI_MODEL = "gpt-3.5-turbo"
+
+MODELS = {
+    "open-ai": {
+        "chat": ChatOpenAI,
+        "models": ["gpt-3.5-turbo"],
+    },
+    "anthropic": {"chat": ChatAnthropic, "models": ["claude-2"]},
+}
+
+# class DummyChatOpenAI(ChatOpenAI):
+#     def __init__(self, **kwargs):
+#         super(ChatOpenAI, self).__init__()
+
+#     def __call__(self, *args, **kwargs):
+#         output = (
+#             Portfolio(**{k: np.random.uniform(0, 1) for k in fields})
+#             .model_dump()
+#             .__repr__()
+#         )
+#         output = output.replace("'", '"')
+#         content = f"```\n{output}\n```"
+#         return AIMessage(content)
+
+# class DummyChatOpenAI(ChatOpenAI):
+#     def __init__(self, **kwargs):
+#         super(ChatOpenAI, self).__init__()
+
+#     def __call__(self, *args, **kwargs):
+#         output = np.random.choice(symbols, size=len(symbols), replace=False)
+#         content = f"```\n{output}\n```"
+#         return AIMessage(content)
+
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 DATABASE_NAME = "prod-database" if os.environ.get("IS_PROD") else "dev-database"
 

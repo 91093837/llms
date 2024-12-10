@@ -5,6 +5,7 @@ import datetime as dt
 from typing import List
 from utils import (
     OPENAI_API_KEY,
+    MODELS,
     OPENAI_MODEL,
     DATABASE_NAME,
     create_model,
@@ -114,20 +115,12 @@ def run(tickers: dict = None):
     Portfolio = create_model("Portfolio", fields, description)
     parser = PydanticOutputParser(pydantic_object=Portfolio)
 
-    class DummyChatOpenAI(ChatOpenAI):
-        def __init__(self, **kwargs):
-            super(ChatOpenAI, self).__init__()
+    for name, conf in MODELS.items():
+        llm = conf["chat"]
+        for model_name in conf["models"]:
+            llm(model_name=model_name, temperature=0)
+            model_1(llm, tickers, parser)
 
-        def __call__(self, *args, **kwargs):
-            output = np.random.choice(symbols, size=len(symbols), replace=False)
-            content = f"```\n{output}\n```"
-            return AIMessage(content)
-
-    llm = ChatOpenAI(
-        openai_api_key=OPENAI_API_KEY, model_name=OPENAI_MODEL, temperature=0
-    )
-
-    model_1(llm, tickers, parser)
     return None
 
 

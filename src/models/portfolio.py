@@ -14,14 +14,13 @@ from utils import (
     JSONFile,
     load_tickers,
     ignore_exception,
+    MODELS,
 )
 from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
 )
 from langchain.output_parsers import PydanticOutputParser
-from langchain_openai import ChatOpenAI
-from langchain_core.messages.ai import AIMessage
 
 
 def model() -> List[JSONFile]:
@@ -110,25 +109,12 @@ def run(tickers: dict = None):
     Portfolio = create_model("Portfolio", fields, description)
     parser = PydanticOutputParser(pydantic_object=Portfolio)
 
-    class DummyChatOpenAI(ChatOpenAI):
-        def __init__(self, **kwargs):
-            super(ChatOpenAI, self).__init__()
+    for name, conf in MODELS.items():
+        llm = conf["chat"]
+        for model_name in conf["models"]:
+            llm(model_name=model_name, temperature=0)
+            model_1(llm, tickers, parser)
 
-        def __call__(self, *args, **kwargs):
-            output = (
-                Portfolio(**{k: np.random.uniform(0, 1) for k in fields})
-                .model_dump()
-                .__repr__()
-            )
-            output = output.replace("'", '"')
-            content = f"```\n{output}\n```"
-            return AIMessage(content)
-
-    llm = ChatOpenAI(
-        openai_api_key=OPENAI_API_KEY, model_name=OPENAI_MODEL, temperature=0
-    )
-
-    model_1(llm, tickers, parser)
     return None
 
 

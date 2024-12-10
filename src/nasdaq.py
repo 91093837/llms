@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import datetime as dt
-from utils import upload_json, get_current_timestamp, DATABASE_NAME
+from utils import JSONFile, get_current_timestamp, DATABASE_NAME
 
 
 def get_data():
@@ -69,7 +69,7 @@ def get_data():
 
     df = df.sort_values(by="marketCap", ascending=False)
     data = df.to_dict("records")
-    upload_json(data, path=f"{DATABASE_NAME}/1-raw/nasdaq.json", extend=True)
+    JSONFile(data, path=f"{DATABASE_NAME}/1-raw/nasdaq.json", extend=True)
     return data
 
 
