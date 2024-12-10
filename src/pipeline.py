@@ -55,27 +55,31 @@ def build_market_index():
     return None
 
 
+def metrics(pnl):
+    output = pd.Series()
+    shifts = [1, 5, 21]
+    output["n_days"] = pnl.shape[0]
+    output["acm"] = (1 + pnl).cumprod().iloc[-1]
+    for s in shifts:
+        output[f"{s}d_sharpe"] = (
+            pnl.rolling(s).mean().iloc[-1] / pnl.rolling(s).std().iloc[-1]
+        )
+        output[f"{s}d_vol"] = pnl.rolling(s).std().iloc[-1]
+    output["max_drawdown"] = (pnl.cummax() - pnl).max()
+    output = output.round(4)
+    return output
+
+
 def calculate_summary():
     pct_chg = load_json(f"{DATABASE_NAME}/1-raw/nasdaq.json")
     portfolio = load_json(f"{DATABASE_NAME}/3-reporting/portfolio.json")
 
-    pct_chg = pd.DataFrame().from_dict(pct_chg)
-    pct_chg = pct_chg.drop_duplicates(subset=["symbol", "date_f"])
-    pct_chg = pct_chg.pivot(index="date_f", columns="symbol", values="percentageChange")
-
-    def metrics(pnl):
-        output = pd.Series()
-        shifts = [1, 5, 21]
-        output["n_days"] = pnl.shape[0]
-        output["acm"] = (1 + pnl).cumprod().iloc[-1]
-        for s in shifts:
-            output[f"{s}d_sharpe"] = (
-                pnl.rolling(s).mean().iloc[-1] / pnl.rolling(s).std().iloc[-1]
-            )
-            output[f"{s}d_vol"] = pnl.rolling(s).std().iloc[-1]
-        output["max_drawdown"] = (pnl.cummax() - pnl).max()
-        output = output.round(4)
-        return output
+    pct_chg = pd.DataFrame().from_dict(pct_chg).query("market_open == True")
+    pct_chg = pct_chg.drop_duplicates(subset=["symbol", "date"])
+    pct_chg = pct_chg.pivot(
+        index="date", columns="symbol", values="marketCap"
+    ).pct_change()
+    # FIXME: adjust returns for corporate evens (stock splits, etc)
 
     names = set(p["name"] for p in portfolio)
 
@@ -83,7 +87,7 @@ def calculate_summary():
     for n in names:
         weight = {p["date"]: p["portfolio"] for p in portfolio if p["name"] == n}
         weight = pd.DataFrame().from_dict(weight).T
-        pnl = (weight * pct_chg / 100).sum(axis=1)
+        pnl = (weight * pct_chg.reindex_like(weight) / 100).sum(axis=1)
 
         summary = metrics(pnl)
         summary["name"] = n
@@ -92,6 +96,7 @@ def calculate_summary():
         summary = summary.reindex(new_index)
         summary = summary.replace(np.nan, "NaN").replace(0, "NaN")
         output.append(summary.to_dict())
+
     JSONFile(output, f"{DATABASE_NAME}/3-reporting/ranking.json")
     return None
 

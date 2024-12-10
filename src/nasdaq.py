@@ -51,14 +51,18 @@ def get_data():
         .replace("UNCH", "0")
         .astype(float)
     )
-    df["date"] = date
+    df["datetime"] = date
 
     try:
-        df["date_f"] = dt.datetime.strptime(date, "%b %d, %Y").strftime("%Y-%m-%d")
+        df["datetime_f"] = dt.datetime.strptime(date, "%b %d, %Y").strftime("%Y-%m-%d")
+        df["date"] = dt.datetime.strptime(date, "%b %d, %Y").strftime("%Y-%m-%d")
         df["market_open"] = False
     except:
-        df["date_f"] = dt.datetime.strptime(date, "%b %d, %Y %H:%M %p").strftime(
+        df["datetime_f"] = dt.datetime.strptime(date, "%b %d, %Y %H:%M %p").strftime(
             "%Y-%m-%d %H:%M %p"
+        )
+        df["date"] = dt.datetime.strptime(date, "%b %d, %Y %H:%M %p").strftime(
+            "%Y-%m-%d"
         )
         df["market_open"] = True
     df["execution_ts"] = get_current_timestamp()
