@@ -1,12 +1,12 @@
 import re
+import logging
 import tiktoken
-import numpy as np
 import datetime as dt
+
+from tiktoken import MODEL_PREFIX_TO_ENCODING
 from typing import List
 from utils import (
-    OPENAI_API_KEY,
     MODELS,
-    OPENAI_MODEL,
     DATABASE_NAME,
     create_model,
     load_jinja_prompt,
@@ -17,24 +17,22 @@ from utils import (
     load_tickers,
     ignore_exception,
 )
-import logging
 from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
 )
 from langchain.output_parsers import PydanticOutputParser
-from langchain_openai import ChatOpenAI
-from langchain_core.messages.ai import AIMessage
 
 
 def model() -> List[JSONFile]:
     pass
 
 
-def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
+def model_1(llm, config: dict) -> List[JSONFile]:
     """
     - one-shot
     """
+    tickers, parser = config["tickers"], config["parser"]
 
     prompt_name = "ranking"
     symbols = [l["symbol"] for l in tickers]
@@ -52,7 +50,7 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     # send prompt to llm
     output = llm(chat_prompt_with_values.to_messages())
 
-    enc = tiktoken.encoding_for_model(OPENAI_MODEL)
+    enc = tiktoken.encoding_for_model(config["model_name"])
     tokens = enc.encode(chat_prompt_with_values.to_string())
 
     # dump raw
@@ -61,9 +59,14 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
         chat_prompt.model_dump()
         | output.model_dump()
         | {"prompt_hash": hash_string(PROMPT)}
-        | {"token_size": len(tokens)}
         | {"execution_ts": ts}
     )
+
+    if config["model_name"] in MODEL_PREFIX_TO_ENCODING:
+        enc = tiktoken.encoding_for_model(config["model_name"])
+        tokens = enc.encode(chat_prompt_with_values.to_string())
+        raw_output = raw_output | {"token_size": len(tokens)}
+
     JSONFile(
         data=[raw_output],
         path=f"{DATABASE_NAME}/2-model_output/model_dump.json",
@@ -80,7 +83,7 @@ def model_1(llm, tickers: List[dict], parser) -> List[JSONFile]:
     content = {k: v for k, v in content.items() if k in symbols}
     raw_portfolio = parser.pydantic_object(**content)
 
-    name = f"{OPENAI_MODEL}/{prompt_name}"
+    name = f"{config['model_name']}/{prompt_name}"
     JSONFile(
         data=[
             {
@@ -116,10 +119,12 @@ def run(tickers: dict = None):
     parser = PydanticOutputParser(pydantic_object=Portfolio)
 
     for name, conf in MODELS.items():
-        llm = conf["chat"]
         for model_name in conf["models"]:
-            llm(model_name=model_name, temperature=0)
-            model_1(llm, tickers, parser)
+            llm = conf["chat"](model_name=model_name, temperature=0)
+            model_1(
+                llm,
+                config={"tickers": tickers, "parser": parser, "model_name": model_name},
+            )
 
     return None
 
