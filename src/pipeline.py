@@ -128,10 +128,10 @@ def main():
         run_ranking(data)
         run_portfolio(data)
 
-    # build portfolios & ranking
-    build_market_index()
-    parse_data()
-    calculate_summary()
+        # build portfolios & ranking
+        build_market_index()
+        parse_data()
+        calculate_summary()
 
     return None
 
