@@ -370,3 +370,96 @@ TypeError: "Could not resolve authentication method. Expected either api_key or 
     raise TypeError(
 TypeError: "Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted"
 
+2024-12-17 15:21:02,776 WARNING failed to maintain structure, new {'CSCO', 'LIN', 'AZN'}
+2024-12-17 15:21:02,886 ERROR An error occurred in function 'model_1': Traceback (most recent call last):
+  File "/home/runner/work/llms/llms/src/utils.py", line 100, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/llms/llms/src/models/ranking.py", line 52, in model_1
+    output = llm.invoke(chat_prompt_with_values.to_messages())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 286, in invoke
+    self.generate_prompt(
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 786, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 643, in generate
+    raise e
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 633, in generate
+    self._generate_with_cache(
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 851, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_anthropic/chat_models.py", line 796, in _generate
+    data = self._client.messages.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_utils/_utils.py", line 275, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/resources/messages.py", line 888, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 1279, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 956, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 982, in _request
+    request = self._build_request(options, retries_taken=retries_taken)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 465, in _build_request
+    headers = self._build_headers(options, retries_taken=retries_taken)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 413, in _build_headers
+    self._validate_headers(headers_dict, custom_headers)
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_client.py", line 189, in _validate_headers
+    raise TypeError(
+TypeError: "Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted"
+
+2024-12-17 15:21:10,248 ERROR An error occurred in function 'model_1': Traceback (most recent call last):
+  File "/home/runner/work/llms/llms/src/utils.py", line 100, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/llms/llms/src/models/portfolio.py", line 56, in model_1
+    output = llm.invoke(chat_prompt_with_values.to_messages())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 286, in invoke
+    self.generate_prompt(
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 786, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 643, in generate
+    raise e
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 633, in generate
+    self._generate_with_cache(
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_core/language_models/chat_models.py", line 851, in _generate_with_cache
+    result = self._generate(
+             ^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/langchain_anthropic/chat_models.py", line 796, in _generate
+    data = self._client.messages.create(**payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_utils/_utils.py", line 275, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/resources/messages.py", line 888, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 1279, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 956, in request
+    return self._request(
+           ^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 982, in _request
+    request = self._build_request(options, retries_taken=retries_taken)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 465, in _build_request
+    headers = self._build_headers(options, retries_taken=retries_taken)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_base_client.py", line 413, in _build_headers
+    self._validate_headers(headers_dict, custom_headers)
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/site-packages/anthropic/_client.py", line 189, in _validate_headers
+    raise TypeError(
+TypeError: "Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted"
+
