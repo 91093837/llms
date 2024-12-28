@@ -52,7 +52,7 @@ MODELS = {
 #         return AIMessage(content)
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-DATABASE_NAME = "prod-database" if os.environ.get("IS_PROD") else "dev-database"
+DATABASE_NAME = "prod-database"
 
 logging.basicConfig(
     level=logging.WARNING,

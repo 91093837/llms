@@ -22,7 +22,7 @@ def build_market_index():
     market_data = load_json(f"{DATABASE_NAME}/1-raw/nasdaq.json")
     portfolio = load_json(f"{DATABASE_NAME}/3-reporting/portfolio.json")
 
-    market_data = pd.DataFrame().from_dict(market_data)
+    market_data = pd.DataFrame().from_dict(market_data).query("market_open == True")
 
     market_data["nasdaq_index"] = (
         market_data.groupby("datetime_f")["marketCap"]
@@ -88,6 +88,9 @@ def calculate_summary():
         weight = pd.DataFrame().from_dict(weight).T
         pnl = (weight * pct_chg.reindex_like(weight) / 100).sum(axis=1)
 
+        # if n == "nasdaq_index":
+        #     breakpoint()
+
         summary = metrics(pnl)
         summary["name"] = n
 
@@ -120,18 +123,18 @@ def parse_data():
 def main():
     assert "llms" in os.getcwd()
 
-    # get nasdaq market-data
-    data = get_data()
+    # # get nasdaq market-data
+    # data = get_data()
 
-    if data[-1]["market_open"]:
-        # # call llms with today-tickers
-        run_ranking(data)
-        run_portfolio(data)
+    # if data[-1]["market_open"]:
+    #     # # call llms with today-tickers
+    #     run_ranking(data)
+    #     run_portfolio(data)
 
-        # build portfolios & ranking
-        build_market_index()
-        parse_data()
-        calculate_summary()
+    # build portfolios & ranking
+    build_market_index()
+    parse_data()
+    calculate_summary()
 
     return None
 
