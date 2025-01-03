@@ -1,4 +1,5 @@
 import os
+
 import json
 import jinja2
 import hashlib
@@ -54,11 +55,33 @@ MODELS = {
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 DATABASE_NAME = "prod-database" if os.environ.get("IS_PROD") else "dev-database"
 
-logging.basicConfig(
-    level=logging.WARNING,
-    format="%(asctime)s %(levelname)s %(message)s",
-    handlers=[logging.FileHandler("session.log", mode="a"), logging.StreamHandler()],
-)
+
+def define_logger(name, write_session = False):
+    # Get the logger instance
+    logger = logging.getLogger(name)
+
+    # Check if the logger already has handlers (to avoid duplicates)
+    if not logger.hasHandlers():
+        logger.setLevel(logging.INFO)  # Set the log level
+
+        # Define log format
+        formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+
+        if write_session:
+            # File handler
+            file_handler = logging.FileHandler("session.log", mode="a")
+            file_handler.setFormatter(formatter)
+            logger.addHandler(file_handler)
+
+        # Stream handler
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+        logger.addHandler(stream_handler)
+
+    return logger
+
+
+logger = define_logger(__name__)
 
 
 class NumpyEncoder(json.JSONEncoder):

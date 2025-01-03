@@ -1,11 +1,13 @@
 import os
 import numpy as np
 import pandas as pd
-from utils import load_json, DATABASE_NAME, JSONFile
+from utils import load_json, DATABASE_NAME, JSONFile, define_logger
 from nasdaq import get_data
 from models.portfolio import run as run_portfolio
 from models.ranking import run as run_ranking
+from functools import wraps
 
+logger = define_logger(__name__)
 
 from pathlib import Path
 
@@ -18,6 +20,16 @@ for path in paths:
     Path(path).mkdir(parents=True, exist_ok=True)
 
 
+def fn(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        logger.info(f"Running {func.__name__}...")
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+@fn
 def build_market_index():
     market_data = load_json(f"{DATABASE_NAME}/1-raw/nasdaq.json")
     portfolio = load_json(f"{DATABASE_NAME}/3-reporting/portfolio.json")
@@ -54,9 +66,10 @@ def build_market_index():
     return None
 
 
+@fn
 def metrics(pnl):
     output = pd.Series()
-    shifts = [1, 5, 21]
+    shifts = [2, 5, 21]
     output["n_days"] = pnl.shape[0]
     output["acm"] = (1 + pnl).cumprod().iloc[-1]
     for s in shifts:
@@ -66,9 +79,11 @@ def metrics(pnl):
         output[f"{s}d_vol"] = pnl.rolling(s).std().iloc[-1]
     output["max_drawdown"] = (pnl.cummax() - pnl).max()
     output = output.round(4)
+
     return output
 
 
+@fn
 def calculate_summary():
     pct_chg = load_json(f"{DATABASE_NAME}/1-raw/nasdaq.json")
     portfolio = load_json(f"{DATABASE_NAME}/3-reporting/portfolio.json")
@@ -83,10 +98,12 @@ def calculate_summary():
     names = set(p["name"] for p in portfolio)
 
     output = []
-    for n in names:
-        weight = {p["date"]: p["portfolio"] for p in portfolio if p["name"] == n}
+    for n in names:        
+        weight = {p["date"]: p["portfolio"] for p in portfolio if p["name"] == n and ":" not in p["date"]}
         weight = pd.DataFrame().from_dict(weight).T
-        pnl = (weight * pct_chg.reindex_like(weight) / 100).sum(axis=1)
+        
+        weight = weight.reindex(pct_chg.index).ffill()
+        pnl = (weight * pct_chg).sum(axis=1)
 
         summary = metrics(pnl)
         summary["name"] = n
@@ -100,6 +117,7 @@ def calculate_summary():
     return None
 
 
+@fn
 def parse_data():
     portfolio = load_json(f"{DATABASE_NAME}/3-reporting/portfolio.json")
     last_date = max([p["date"] for p in portfolio])
@@ -117,6 +135,7 @@ def parse_data():
     return None
 
 
+@fn
 def main():
     assert "llms" in os.getcwd()
 
