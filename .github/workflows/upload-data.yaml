@@ -45,6 +45,7 @@ jobs:
         run: |
           git config --global user.email "auto@robot.xyz"
           git config --global user.name "ci/cd"
+          git lfs migrate import --include="*.json"
           git add .
           git commit -m "update data"
           git push origin main
