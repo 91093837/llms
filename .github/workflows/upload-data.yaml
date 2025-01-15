@@ -1,58 +1,58 @@
-name: upload data to website
+# name: upload data to website
 
-on:
-  schedule:
-    - cron: '0 15 * * 1-5' # 9:30am EST + 30m
-    - cron: '0 22 * * 1-5' # 4:00pm EST + 1h
-  workflow_dispatch:
+# on:
+#   schedule:
+#     - cron: '0 15 * * 1-5' # 9:30am EST + 30m
+#     - cron: '0 22 * * 1-5' # 4:00pm EST + 1h
+#   workflow_dispatch:
 
-jobs:
-  upload-file:
-    runs-on: ubuntu-latest
+# jobs:
+#   upload-file:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: checkout repo
-        uses: actions/checkout@v3
+#     steps:
+#       - name: checkout repo
+#         uses: actions/checkout@v3
 
-      - name: set up python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
+#       - name: set up python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: '3.12'
           
-      - name: install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+#       - name: install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
 
-      - name: run pipeline
-        run: |
-          python src/pipeline.py
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          IS_PROD: ${{ secrets.IS_PROD }}
+#       - name: run pipeline
+#         run: |
+#           python src/pipeline.py
+#         env:
+#           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+#           IS_PROD: ${{ secrets.IS_PROD }}
 
-      - name: clone website
-        run: |
-          git clone https://${{ secrets.repo_token }}@github.com/can-be-anything/website.git website-repo
+#       - name: clone website
+#         run: |
+#           git clone https://${{ secrets.repo_token }}@github.com/can-be-anything/website.git website-repo
 
-      - name: copy file to website
-        run: |
-          ls -la
-          mkdir -p website-repo/website/src/data/
-          cp -rf prod-database/ website-repo/website/src/data/
+#       - name: copy file to website
+#         run: |
+#           ls -la
+#           mkdir -p website-repo/website/src/data/
+#           cp -rf prod-database/ website-repo/website/src/data/
 
-      - name: commit and push 
-        run: |
-          git config --global user.email "auto@robot.xyz"
-          git config --global user.name "ci/cd"
-          git lfs migrate import --include="*.json"
-          git add .
-          git commit -m "update data"
-          git push origin main
+#       - name: commit and push 
+#         run: |
+#           git config --global user.email "auto@robot.xyz"
+#           git config --global user.name "ci/cd"
+#           git lfs migrate import --include="*.json"
+#           git add .
+#           git commit -m "update data"
+#           git push origin main
 
-      - name: commit and push website 
-        run: |
-          cd website-repo
-          git add .
-          git commit -m "update data"
-          git push origin main
+#       - name: commit and push website 
+#         run: |
+#           cd website-repo
+#           git add .
+#           git commit -m "update data"
+#           git push origin main
